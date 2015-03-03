@@ -2,8 +2,8 @@ package enums;
 
 
 
-import java.awt.Image;
 
+import javafx.scene.image.Image;
 
 
 
@@ -11,20 +11,27 @@ public enum Square {
 	
 	
 	
-	BASIC(new Image("images/square.png")), "lol");
+	GRASS(new Image("images/basic-tile.png")),
+	SHEEP(new Image("images/sheep-tile.png")), 
+	HERDER(new Image("images/herder-tile.png"));
+	
 	
 
 	
-	private String code;
+	
 	private Image img;
 	
-	private Square(Image image, String code){
+	private Square(Image image){
 		
 		
 		this.img = image;
-		this.code = code;
-		
 		
 	}
+	
+	public Image getImage(){
+		return this.img;
+	}
+	
+	
 
 }

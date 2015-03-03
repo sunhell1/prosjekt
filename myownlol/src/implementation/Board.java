@@ -1,7 +1,8 @@
-package myownlol;
+package implementation;
 
 import java.awt.Point;
 
+import enums.Condition;
 import enums.Constants;
 import enums.Square;
 import interfaces.Player;
@@ -12,19 +13,46 @@ public class Board implements interfaces.Board {
 	private int height;
 	private Player player;
 	private Square[][] board;
+	private Sheep sheep;
 
 	public Board() {
 		this.width = Constants.BOARD_WIDTH;
 		this.height = Constants.BOARD_HEIGHT;
-		this.player = player;
 		board = new Square[width][height];
 
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				board[i][j] = Square.BASIC;
+				board[i][j] = Square.GRASS;
 			}
 		}
 	}
+	
+	public void setSheep(Sheep sheep){
+		this.sheep = sheep;
+	}
+	
+	public void setPlayer(Player player){
+		this.player = player;
+	}
+	
+	public void setSquareAt(int x, int y, Square sq){
+		board[x][y] = sq;
+		
+	}
+	
+	public Square getSquareAt(int x, int y){
+		return board[x][y];
+		
+	}
+	
+	public void updateStatus(){
+		if (player.getLocation().equals(sheep.getLocation())){
+			sheep.setCondition(Condition.CAUGHT);
+			
+		}
+		
+	}
+	
 
 	@Override
 	public int getWidth() {
@@ -42,6 +70,10 @@ public class Board implements interfaces.Board {
 	public Player getPlayer() {
 		return this.player;
 	}
+	
+	public Sheep getSheep(){
+		return this.sheep;
+	}
 
 	public void setWidth(int width) {
 		this.width = width;
@@ -51,7 +83,7 @@ public class Board implements interfaces.Board {
 		this.height = height;
 	}
 
-	public Square[][] getBoard() {
+	public Square[][] getSquares() {
 		return this.board;
 	}
 

@@ -1,28 +1,30 @@
-package myownlol;
+package implementation;
 
 import java.awt.Point;
 
+
+import enums.Condition;
 import enums.Constants;
 import enums.Direction;
 
 public class Player implements interfaces.Player {
 
 	private Direction dir;
-	private String name;
+	
 	private Point startLocation;
 	private Point location;
 	private int lives;
 	private Board board;
-	private boolean alive;
+	private Condition con;
 
-	public Player(String name, Direction dir, Point startLocation, Board board) {
-		this.name = name;
+	public Player(Direction dir, Point startLocation, Board board, Condition con) {
+
 		this.dir = dir;
 		this.board = board;
 		this.lives = Constants.MAX_LIVES;
 		this.startLocation = startLocation;
 		this.location = startLocation;
-		this.alive = true;
+		this.con = con;
 
 	}
 
@@ -36,10 +38,6 @@ public class Player implements interfaces.Player {
 		return this.dir;
 	}
 
-	public String getName() {
-		return this.name;
-
-	}
 
 	public Point getStartLocation() {
 		return this.startLocation;
@@ -48,21 +46,30 @@ public class Player implements interfaces.Player {
 	public int getLives() {
 		return this.lives;
 	}
+	
+	public void setCondition(Condition con){
+		this.con = con;
+		
+	}
+	
+	public Condition getCondition(){
+		return this.con;
+	}
+	
+	
 
 	public void takeDamage() {
 		this.lives--;
 		if (this.lives <= 0){
 			
-			this.alive = false;
+			this.con = Condition.DEAD;
 		}
 
 	}
 	
-	public boolean isAlive(){
-		return this.alive;
-	}
 
-	@SuppressWarnings("serial")
+
+
 	public void move(Point p, Direction dir) throws IllegalArgumentException {
 
 		if (dir.equals(Direction.NORTH)) {
@@ -70,6 +77,7 @@ public class Player implements interfaces.Player {
 					+ dir.getY()))) {
 
 				this.takeDamage();
+				this.location = startLocation;
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -80,6 +88,7 @@ public class Player implements interfaces.Player {
 					+ dir.getY()))) {
 
 				this.takeDamage();
+				this.location = startLocation;
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -91,6 +100,7 @@ public class Player implements interfaces.Player {
 					+ dir.getY()))) {
 
 				this.takeDamage();
+				this.location = startLocation;
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -102,6 +112,7 @@ public class Player implements interfaces.Player {
 					+ dir.getY()))) {
 
 				this.takeDamage();
+				this.location = startLocation;
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
