@@ -1,88 +1,98 @@
 package graphics;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.KeyStroke;
+
+import enums.Constants;
+import enums.Square;
 import javafx.application.Application;
-import javafx.stage.Stage;
-import implementation.*;
-import implementation.Board;
-import implementation.Game;
-import implementation.Player;
-import implementation.Sheep;
-import enums.*;
-import interfaces.*;
-import images.*;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.awt.Point;
 
 public class GUI extends Application {
 
-	private Game game;
-
-	public static void main(String[] args) { // her starter main (???)
-		Application.launch(args);
-	}
-
-	private Stage primaryStage;
-	private Scene splash;
-
-	private GameController gamecontroller;
-	private double gameX;
-	private double gameY;
+	private final int PREFERRED_DIM = 50;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		initiateModel();
 
-		try {
-			this.primaryStage = primaryStage;
+		Group root = new Group();
 
-			double screenWidth = java.awt.Toolkit.getDefaultToolkit()
-					.getScreenSize().width;
-			double screenHeight = java.awt.Toolkit.getDefaultToolkit()
-					.getScreenSize().height;
-			
-			double gameWidth = 19 * screenWidth / 20;
-			double gameHeight = 4 * screenHeight / 5;
-			
-			this.gameX = (screenWidth - gameWidth) / 2;
-			this.gameY = (screenHeight - gameHeight) / 2;
-			
-			this.gamecontroller = new GameController(new Group(), gameWidth, gameHeight, this.game);
-			
+		TilePane tiles = new TilePane();
+		TilePane playersheep = new TilePane();
 
+		tiles.setVgap(0);
+		tiles.setHgap(0);
+
+		tiles.setPrefRows(12);
+		tiles.setPrefColumns(12);
+
+		tiles.setPrefSize(PREFERRED_DIM * Constants.BOARD_WIDTH, PREFERRED_DIM
+				* Constants.BOARD_HEIGHT);
+
+		playersheep.setVgap(0);
+		playersheep.setHgap(0);
+		playersheep.setPrefRows(Constants.BOARD_HEIGHT);
+		playersheep.setPrefColumns(Constants.BOARD_WIDTH);
+
+		for (int i = 0; i < 144; i++) {
+
+			if (i == 55) {
+				ImageView iv1 = new ImageView();
+				iv1.setFitHeight(PREFERRED_DIM);
+				iv1.setFitWidth(PREFERRED_DIM);
+				iv1.setImage(Square.HERDER.getImage());
+				playersheep.getChildren().add(iv1);
+
+			}
+
+			else if (i == 132) {
+				ImageView iv1 = new ImageView();
+				iv1.setFitHeight(PREFERRED_DIM);
+				iv1.setFitWidth(PREFERRED_DIM);
+				iv1.setImage(Square.SHEEP.getImage());
+				playersheep.getChildren().add(iv1);
+
+			}
+
+			else {
+
+				ImageView iv1 = new ImageView();
+				iv1.setFitHeight(PREFERRED_DIM);
+				iv1.setFitWidth(PREFERRED_DIM);
+				iv1.setImage(null);
+				playersheep.getChildren().add(iv1);
+			}
 		}
 
-		catch (Exception e) {
-			e.printStackTrace();
+		for (int i = 0; i < 144; i++) {
+			ImageView iv = new ImageView();
+			iv.setFitWidth(PREFERRED_DIM);
+			iv.setFitHeight(PREFERRED_DIM);
+			iv.setImage(Square.GRASS.getImage());
+
+			tiles.getChildren().add(iv);
 		}
 
-	}
-
-	private void initiateModel() {
-		Point startPlayerPosition = new Point(2, 5);
-		Point startSheepPosition = new Point(10, 10);
-
-		Board board = new Board();
-
-		Player fredrik = new Player(Direction.EAST, startPlayerPosition, board,
-				Condition.ALIVE);
-		Sheep rodmundur = new Sheep(startSheepPosition, Direction.WEST, board,
-				Condition.ALIVE);
-
-		board.setPlayer(fredrik);
-		board.setSheep(rodmundur);
-
-		game = new Game(fredrik, rodmundur, board);
+		root.getChildren().add(tiles);
+		root.getChildren().add(playersheep);
+		Scene scene = new Scene(root, 600, 600);
+		primaryStage.setTitle("SheepHerder");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 
 	}
 
-	public void startGame() {
-		primaryStage.setScene(gamecontroller);
-		primaryStage.setX(this.gameX);
-		primaryStage.setY(this.gameY);
+	public static void main(String[] args) {
+		launch(args);
 	}
-
 }

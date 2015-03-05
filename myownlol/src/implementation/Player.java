@@ -76,8 +76,7 @@ public class Player implements interfaces.Player {
 			if (board.isLocationOutOfBounds(new Point(p.x + dir.getX(), p.y
 					+ dir.getY()))) {
 
-				this.takeDamage();
-				this.location = startLocation;
+			
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -87,8 +86,7 @@ public class Player implements interfaces.Player {
 			if (board.isLocationOutOfBounds(new Point(p.x + dir.getX(), p.y
 					+ dir.getY()))) {
 
-				this.takeDamage();
-				this.location = startLocation;
+				
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -99,8 +97,7 @@ public class Player implements interfaces.Player {
 			if (board.isLocationOutOfBounds(new Point(p.x + dir.getX(), p.y
 					+ dir.getY()))) {
 
-				this.takeDamage();
-				this.location = startLocation;
+			
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -111,8 +108,7 @@ public class Player implements interfaces.Player {
 			if (board.isLocationOutOfBounds(new Point(p.x + dir.getX(), p.y
 					+ dir.getY()))) {
 
-				this.takeDamage();
-				this.location = startLocation;
+				
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());

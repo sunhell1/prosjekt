@@ -48,7 +48,6 @@ public class Board implements interfaces.Board {
 	public void updateStatus(){
 		if (player.getLocation().equals(sheep.getLocation())){
 			sheep.setCondition(Condition.CAUGHT);
-			
 		}
 		
 	}
@@ -81,6 +80,11 @@ public class Board implements interfaces.Board {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+	
+	
+	public void setSquares(Square[][] squares){
+		this.board = squares;
 	}
 
 	public Square[][] getSquares() {
