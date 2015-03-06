@@ -14,14 +14,8 @@ public class StartDisplay {
 	
 	private ImageView startDisplay;
 	
-	private Button startButton;
-	
-	private Group group;
-	
 	public StartDisplay() {
-		
-		group = new Group();
-		
+
 		tilePane = new TilePane();
 		tilePane.setHgap(0);
 		tilePane.setPrefColumns(1);
@@ -33,12 +27,10 @@ public class StartDisplay {
 		
 		tilePane.getChildren().add(startDisplay);
 		
-		group.getChildren().add(tilePane);
-		
 	}
 	
-	public Group getGroup() {
-		return this.group;
+	public TilePane getTilePane() {
+		return this.tilePane;
 	}
 
 }

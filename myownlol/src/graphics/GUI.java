@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
@@ -46,10 +47,17 @@ public class GUI extends Application {
 	private StartDisplay sd;
 
 	private BoardDisplay bd;
+	
+	private WinnerDisplay wd;
 
 	private Button startButton;
 	
+	private Button playagain;
+	
 	private Scene scene;
+	
+	
+	Scanner key = new Scanner(System.in);
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -60,11 +68,13 @@ public class GUI extends Application {
 	
 		
 		sd = new StartDisplay();
+		wd = new WinnerDisplay();
 
 		startButton = new Button("STARTT");
 		startButton.setOnMouseClicked(event -> mouseClicked(event));
+		startButton.setOnMouseExited(event -> mouseReleased(event));
 
-		this.masterGroup.getChildren().add(sd.getGroup());
+		this.masterGroup.getChildren().add(sd.getTilePane());
 		this.masterGroup.getChildren().add(startButton);
 
 		scene = new Scene(masterGroup, 600, 600);
@@ -88,6 +98,7 @@ public class GUI extends Application {
 		} else if (e.getCode() == KeyCode.UP) {
 			sh.getPlayer().move(sh.getPlayer().getLocation(), Direction.NORTH);
 			rePaint();
+
 		} else if (e.getCode() == KeyCode.DOWN) {
 			sh.getPlayer().move(sh.getPlayer().getLocation(), Direction.SOUTH);
 			rePaint();
@@ -118,19 +129,38 @@ public class GUI extends Application {
 
 		Sheep Rodmundur = new Sheep(sheepPoint, Direction.SOUTH, board,
 				Condition.ALIVE);
+		
+		board.setPlayer(Fredrik);
+		board.setSheep(Rodmundur);
 
 		sh = new SheepHerder(Fredrik, Rodmundur, board);
 
-		bd = new BoardDisplay(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT, sh);
-
-		
+		bd = new BoardDisplay(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT, sh);		
 		masterGroup.getChildren().add(bd.getGroup());
 	}
 	
+	public void mouseReleased(MouseEvent e) {
+	}
+	
 	public void rePaint(){
+		
+		if(sh.isWinningConiditions()){
+			masterGroup.getChildren().remove(sd.getTilePane());
+			masterGroup.getChildren().remove(startButton);
+			masterGroup.getChildren().removeAll(bd.getGroup());
+			masterGroup.getChildren().add(wd.getTilePane());
+			
+			playagain = new Button("PLAY MORE??");
+			playagain.setOnMouseClicked(event -> mouseClicked(event));
+			masterGroup.getChildren().add(playagain);
+			
+
+		}
+		else{
 		masterGroup.getChildren().remove(bd.getGroup());
 		bd = new BoardDisplay(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT, sh);
 		masterGroup.getChildren().add(bd.getGroup());
+		}
 	}
 
 }

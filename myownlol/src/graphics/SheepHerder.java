@@ -13,15 +13,23 @@ public class SheepHerder {
 	private Board board;
 	private Sheep sheep;
 	private Player herder;
+	private boolean winner;
 
 	public SheepHerder(Player player, Sheep sheep, Board board) {
 		this.board = board;
 		this.herder = player;
 		this.sheep = sheep;
+		this.winner = false;
 	}
 
 	public Board getBoard() {
 		return board;
+	}
+	
+	public boolean isWinningConiditions(){
+		board.updateStatus();
+		return (this.sheep.getCondition().equals(Condition.CAUGHT));
+		
 	}
 
 	public void setBoard(Board board) {
