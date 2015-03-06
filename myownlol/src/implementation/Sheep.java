@@ -6,58 +6,58 @@ import enums.Condition;
 import enums.Direction;
 
 public class Sheep implements interfaces.Sheep {
-	
-	private Direction dir;
+
+	private Direction direction;
 	private Point location;
 	private Board board;
 	private String name;
 	private Condition con;
-	
-	
-
 
 	public Sheep(Point point, Direction dir, Board board, Condition condition) {
 		this.location = point;
-		this.dir = dir;
+		this.direction = dir;
 		this.board = board;
 		this.name = "Sheep";
 		this.con = condition;
-		
-	}
 
+	}
 
 	public Condition getCondition() {
 		return this.con;
 	}
 
-
 	public void setCondition(Condition condition) {
 		this.con = condition;
 	}
 
-
 	public Direction getDir() {
-		return dir;
+		return this.direction;
 	}
-
 
 	public Point getLocation() {
-		return location;
+		return this.location;
 	}
-
 
 	public Board getBoard() {
-		return board;
+		return this.board;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	public int getX() {
+
+		return this.location.x;
+
+	}
+
+	public int getY() {
+		return this.location.y;
+	}
 
 }

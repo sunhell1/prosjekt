@@ -1,16 +1,12 @@
 package graphics;
 
+import javafx.scene.image.Image;
+
 import enums.Condition;
 import enums.Direction;
 import implementation.Board;
 import implementation.Player;
 import implementation.Sheep;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
 
 public class SheepHerder {
 	
@@ -21,7 +17,7 @@ public class SheepHerder {
 	public SheepHerder(Player player, Sheep sheep, Board board) {
 		this.board = board;
 		this.herder = player;
-		this.board = board;
+		this.sheep = sheep;
 	}
 
 	public Board getBoard() {
@@ -33,7 +29,7 @@ public class SheepHerder {
 	}
 
 	public Sheep getSheep() {
-		return sheep;
+		return this.sheep;
 	}
 
 	public void setSheep(Sheep sheep) {
@@ -50,7 +46,10 @@ public class SheepHerder {
 
 	public void startSheepHerder() {
 		while(sheep.getCondition().equals(Condition.ALIVE)) {
-			board.updateStatus();
+			this.board.updateStatus();
 		}
+	}
+	public Image getImageAt(int x , int y) {
+		return this.board.getSquareAt(x, y).getImage();
 	}
 }

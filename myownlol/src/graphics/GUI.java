@@ -1,18 +1,33 @@
 package graphics;
 
+import implementation.Board;
+import implementation.Player;
+import implementation.Sheep;
+
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.KeyStroke;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
+import enums.Condition;
 import enums.Constants;
+import enums.Direction;
 import enums.Square;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
@@ -20,79 +35,102 @@ import javafx.stage.Stage;
 
 public class GUI extends Application {
 
+	private Stage primaryStage;
+
 	private final int PREFERRED_DIM = 50;
+
+	private Group masterGroup;
+	
+	private SheepHerder sh;
+
+	private StartDisplay sd;
+
+	private BoardDisplay bd;
+
+	private Button startButton;
+	
+	private Scene scene;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		Group root = new Group();
+		this.primaryStage = primaryStage;
 
-		TilePane tiles = new TilePane();
-		TilePane playersheep = new TilePane();
+		this.masterGroup = new Group();
+	
+		
+		sd = new StartDisplay();
 
-		tiles.setVgap(0);
-		tiles.setHgap(0);
+		startButton = new Button("STARTT");
+		startButton.setOnMouseClicked(event -> mouseClicked(event));
 
-		tiles.setPrefRows(12);
-		tiles.setPrefColumns(12);
+		this.masterGroup.getChildren().add(sd.getGroup());
+		this.masterGroup.getChildren().add(startButton);
 
-		tiles.setPrefSize(PREFERRED_DIM * Constants.BOARD_WIDTH, PREFERRED_DIM
-				* Constants.BOARD_HEIGHT);
+		scene = new Scene(masterGroup, 600, 600);
 
-		playersheep.setVgap(0);
-		playersheep.setHgap(0);
-		playersheep.setPrefRows(Constants.BOARD_HEIGHT);
-		playersheep.setPrefColumns(Constants.BOARD_WIDTH);
+		scene.setOnKeyPressed(event -> keyPressed(event));
+		scene.setOnKeyTyped(event -> keyTyped(event));
+		scene.setOnKeyReleased(event -> keyReleased(event));
 
-		for (int i = 0; i < 144; i++) {
-
-			if (i == 55) {
-				ImageView iv1 = new ImageView();
-				iv1.setFitHeight(PREFERRED_DIM);
-				iv1.setFitWidth(PREFERRED_DIM);
-				iv1.setImage(Square.HERDER.getImage());
-				playersheep.getChildren().add(iv1);
-
-			}
-
-			else if (i == 132) {
-				ImageView iv1 = new ImageView();
-				iv1.setFitHeight(PREFERRED_DIM);
-				iv1.setFitWidth(PREFERRED_DIM);
-				iv1.setImage(Square.SHEEP.getImage());
-				playersheep.getChildren().add(iv1);
-
-			}
-
-			else {
-
-				ImageView iv1 = new ImageView();
-				iv1.setFitHeight(PREFERRED_DIM);
-				iv1.setFitWidth(PREFERRED_DIM);
-				iv1.setImage(null);
-				playersheep.getChildren().add(iv1);
-			}
-		}
-
-		for (int i = 0; i < 144; i++) {
-			ImageView iv = new ImageView();
-			iv.setFitWidth(PREFERRED_DIM);
-			iv.setFitHeight(PREFERRED_DIM);
-			iv.setImage(Square.GRASS.getImage());
-
-			tiles.getChildren().add(iv);
-		}
-
-		root.getChildren().add(tiles);
-		root.getChildren().add(playersheep);
-		Scene scene = new Scene(root, 600, 600);
 		primaryStage.setTitle("SheepHerder");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
 	}
 
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+	public void keyPressed(KeyEvent e) {
+		if (e.getCode() == KeyCode.ESCAPE) {
+			primaryStage.close();
+		} else if (e.getCode() == KeyCode.UP) {
+			sh.getPlayer().move(sh.getPlayer().getLocation(), Direction.NORTH);
+			rePaint();
+		} else if (e.getCode() == KeyCode.DOWN) {
+			sh.getPlayer().move(sh.getPlayer().getLocation(), Direction.SOUTH);
+			rePaint();
+		} else if (e.getCode() == KeyCode.LEFT) {
+			sh.getPlayer().move(sh.getPlayer().getLocation(), Direction.WEST);
+			rePaint();
+		} else if (e.getCode() == KeyCode.RIGHT) {
+			sh.getPlayer().move(sh.getPlayer().getLocation(), Direction.EAST);
+			rePaint();
+		}
+	}
+
+	public void keyTyped(KeyEvent e) {
+	}
+
+	public void keyReleased(KeyEvent e) {
+	}
+
+	public void mouseClicked(MouseEvent e) {
+
+		Point sheepPoint = Constants.sheepStartPoint;
+		Point playerPoint = Constants.playerStartPoint;
+
+		Board board = new Board();
+
+		Player Fredrik = new Player(Direction.NORTH, playerPoint, board,
+				Condition.ALIVE);
+
+		Sheep Rodmundur = new Sheep(sheepPoint, Direction.SOUTH, board,
+				Condition.ALIVE);
+
+		sh = new SheepHerder(Fredrik, Rodmundur, board);
+
+		bd = new BoardDisplay(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT, sh);
+
+		
+		masterGroup.getChildren().add(bd.getGroup());
+	}
+	
+	public void rePaint(){
+		masterGroup.getChildren().remove(bd.getGroup());
+		bd = new BoardDisplay(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT, sh);
+		masterGroup.getChildren().add(bd.getGroup());
+	}
+
 }
