@@ -38,31 +38,25 @@ public class GUI extends Application {
 
 	private Stage primaryStage;
 
-	private Group masterGroup;
+	private BoardDisplay bd;
+	private StartDisplay sd;
+	private WinningDisplay wd;
 
-	private SheepHerder sh;
-
-	private Displays display;
-
-	private Button startButton;
-
-	private Button playagain;
-
-	private Scene scene;
+	private SheepHerder sheepHerder;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		initModel();
-
 		this.primaryStage = primaryStage;
 
-		this.masterGroup = new Group();
-		
-		scene = display.getStartDisplay();
+		this.bd = new BoardDisplay(Constants.BOARD_WIDTH,
+				Constants.BOARD_HEIGHT, Constants.levelOne);
+		this.sd = new StartDisplay();
+		this.wd = new WinningDisplay();
 
 		primaryStage.setTitle("SheepHerder");
-		primaryStage.setScene(scene);
+		primaryStage.setScene(new SheepHerder(new Group(), 600, 600, this, wd,
+				sd, bd));
 		primaryStage.show();
 	}
 
@@ -70,12 +64,8 @@ public class GUI extends Application {
 		launch(args);
 	}
 
-
-	public void initModel() {
-		display = new Displays(Constants.BOARD_HEIGHT, Constants.BOARD_HEIGHT);
-		display.setLevel(0);
-		this.sh = new SheepHerder(this.display);
-		sh.initateGame();
+	public void closePrimary() {
+		primaryStage.close();
 	}
 
 }

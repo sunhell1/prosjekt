@@ -5,7 +5,7 @@ import java.awt.Point;
 import enums.Condition;
 import enums.Constants;
 import enums.Square;
-import interfaces.Player;
+import implementation.Player;
 
 public class Board implements interfaces.Board {
 
@@ -48,6 +48,9 @@ public class Board implements interfaces.Board {
 	public void updateStatus(){
 		if (player.getLocation().equals(sheep.getLocation())){
 			sheep.setCondition(Condition.CAUGHT);
+		}
+		else if (this.player.getLives() <= 0) {
+			player.setCondition(Condition.DEAD);
 		}
 		
 	}
