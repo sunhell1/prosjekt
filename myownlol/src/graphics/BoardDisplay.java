@@ -1,16 +1,29 @@
 package graphics;
 
+import java.awt.Point;
+
 import enums.Square;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
 public class BoardDisplay {
 
-	private TilePane tp;
+	private GridPane square;
+	
 	private Group group;
+
 	private Square[][] board;
+
+	private ImageView herder;
+	private ImageView sheep;
+	private ImageView grass;
+
+	private Image herderImage;
+	private Image sheepImage;
+	private Image grassImage;
 
 	private int width;
 	private int height;
@@ -22,58 +35,77 @@ public class BoardDisplay {
 		this.width = width;
 		this.height = height;
 		this.board = board;
+		
+		this.square = new GridPane();
+		TilePane k = new TilePane();
 
-		this.tp = new TilePane();
-		this.group = new Group();
+		this.group = new Group(); 
 
-		tp.setHgap(0);
-		tp.setVgap(0);
+		herderImage = Square.HERDER.getImage();
+		sheepImage = Square.SHEEP.getImage();
+		grassImage = Square.GRASS.getImage();
 
-		tp.setPrefRows(height);
-		tp.setPrefColumns(width);
+		herder = new ImageView();
+		herder.setFitHeight(PREFERRED_DIM);
+		herder.setFitWidth(PREFERRED_DIM);
+		herder.setImage(herderImage);
 
-		tp.setPrefSize(PREFERRED_DIM * width, PREFERRED_DIM * height);
+		square.setHgap(0);
+		square.setVgap(0);
+
+		square.setPrefHeight(height);
+		square.setPrefWidth(width);
+		
+		square.setPrefSize(PREFERRED_DIM * width, PREFERRED_DIM * height);
 
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-
-				Image img = board[i][j].getImage();
-
-				ImageView iv = new ImageView();
-				iv.setFitHeight(PREFERRED_DIM);
-				iv.setFitWidth(PREFERRED_DIM);
-				iv.setImage(img);
-
-				tp.getChildren().add(iv);
+				grass = new ImageView();
+				grass.setFitHeight(PREFERRED_DIM);
+				grass.setFitWidth(PREFERRED_DIM);
+				grass.setImage(grassImage);
+				square.add(grass, j, i);
 			}
 		}
-
-		Square[] sheepandherder = { Square.HERDER, Square.SHEEP };
-
-		for (Square sq : sheepandherder) {
-
-			Image img = sq.getImage();
-
-			ImageView iv = new ImageView();
-			iv.setFitHeight(PREFERRED_DIM);
-			iv.setFitWidth(PREFERRED_DIM);
-			iv.setImage(img);
-
-			tp.getChildren().add(iv);
-
-		}
-
-		group.getChildren().add(tp);
-
+		group.getChildren().add(square);
 	}
 
-	public TilePane getTilePane() {
+	public void drawHerder(Point p) {
+		square.getChildren().removeAll(herder);
+		square.add(herder, p.x, p.y);
+	}
 
-		return this.tp;
+	public void moveHerder(Point p) {
+		square.getChildren().remove(herder);
+		square.add(herder, p.x, p.y);
+	}
+	
+	public void removeSheep(int index) {
+		square.getChildren().remove(index);
+		square.getChildren().remove(index);
+		
+	}
+
+	public void drawSheep(Point p) {
+		sheep = new ImageView();
+		sheep.setFitHeight(PREFERRED_DIM);
+		sheep.setFitWidth(PREFERRED_DIM);
+		sheep.setImage(sheepImage);
+		square.add(sheep, p.x, p.y);
+		
+//		square.getChildren().removeAll(sheep);
+	}
+
+	public GridPane getGridPane() {
+		return this.square;
 	}
 
 	public Group getGroup() {
 		return this.group;
+	}
+	
+	public ImageView getSheep() {
+		return this.sheep;
 	}
 
 }

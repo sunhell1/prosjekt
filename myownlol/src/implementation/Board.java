@@ -13,7 +13,7 @@ public class Board implements interfaces.Board {
 	private int height;
 	private Player player;
 	private Square[][] board;
-	private Sheep sheep;
+	private Sheep[] sheep;
 
 	public Board() {
 		this.width = Constants.BOARD_WIDTH;
@@ -27,7 +27,7 @@ public class Board implements interfaces.Board {
 		}
 	}
 	
-	public void setSheep(Sheep sheep){
+	public void setSheep(Sheep[] sheep){
 		this.sheep = sheep;
 	}
 	
@@ -44,17 +44,6 @@ public class Board implements interfaces.Board {
 		return board[x][y];
 		
 	}
-	
-	public void updateStatus(){
-		if (player.getLocation().equals(sheep.getLocation())){
-			sheep.setCondition(Condition.CAUGHT);
-		}
-		else if (this.player.getLives() <= 0) {
-			player.setCondition(Condition.DEAD);
-		}
-		
-	}
-	
 
 	@Override
 	public int getWidth() {
@@ -73,7 +62,7 @@ public class Board implements interfaces.Board {
 		return this.player;
 	}
 	
-	public Sheep getSheep(){
+	public Sheep[] getSheep(){
 		return this.sheep;
 	}
 
