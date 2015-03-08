@@ -2,6 +2,7 @@ package graphics;
 
 import java.awt.Point;
 
+import sun.audio.AudioPlayer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -12,6 +13,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import enums.Condition;
 import enums.Constants;
 import enums.Direction;
@@ -31,6 +35,9 @@ public class SheepHerder extends Scene {
 	private StartDisplay sd;
 	private WinningDisplay wd;
 	private BoardDisplay bd;
+	
+	private AudioClip theme = new AudioClip(SheepHerder.class.getResource("/media/SheepHerdder.mp3").toString());
+	private AudioClip baa = new AudioClip(SheepHerder.class.getResource("/media/baa.mp3").toString());
 
 	private Group group;
 
@@ -45,7 +52,7 @@ public class SheepHerder extends Scene {
 		super(group, width, height);
 
 		this.group = group;
-
+		
 		this.winner = false;
 
 		this.wd = wDisplay;
@@ -73,7 +80,7 @@ public class SheepHerder extends Scene {
 		this.group.getChildren().remove(bd.getGroup());
 		this.group.getChildren().add(sd.getStartGroup());
 		sd.getStartButton().setOnMouseClicked(event -> mouseClicked(event));
-
+		theme.play();
 	}
 
 	public void winningScene() {
@@ -82,7 +89,7 @@ public class SheepHerder extends Scene {
 		this.group.getChildren().removeAll(wd.getWinningGroup());
 		this.group.getChildren().add(wd.getWinningGroup());
 		wd.getWinningButton().setOnMouseClicked(event -> mouseClicked(event));
-
+		theme.play();
 	}
 
 	public void initateGame(int levelNumber) {
@@ -105,7 +112,6 @@ public class SheepHerder extends Scene {
 		placeSheep();
 
 		this.setOnKeyPressed(event -> keyPressed(event));
-
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -184,6 +190,8 @@ public class SheepHerder extends Scene {
 	}
 
 	public void mouseClicked(MouseEvent e) {
+		bd.getGroup().getChildren().remove(sd.getStartGroup());
+		theme.stop();
 		int level = 0;
 		initateGame(level++);
 	}
@@ -212,15 +220,14 @@ public class SheepHerder extends Scene {
 
 		for (Sheep sheep : sheeps) {
 			if (herder.getLocation().equals(sheep.getLocation())) {
+				baa.play();
 				bd.removeSheep((convertPointToIndex(herder.getLocation())));
-				//sheepCount--;
+				sheepCount--;
 			}
 		}
 		if (sheepCount == 0){
 			return 1;
 		}
-		
-
 		
 		else if (herder.getLives() <= 0) {
 			return 2;
