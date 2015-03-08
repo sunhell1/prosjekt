@@ -1,6 +1,7 @@
 package implementation;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import enums.Condition;
 import enums.Constants;
@@ -13,26 +14,12 @@ public class Board implements interfaces.Board {
 	private int height;
 	private Player player;
 	private Square[][] board;
-	private Sheep[] sheep;
+	private ArrayList<Sheep> sheep;
 
 	public Board() {
 		this.width = Constants.BOARD_WIDTH;
 		this.height = Constants.BOARD_HEIGHT;
 		board = new Square[width][height];
-
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				board[i][j] = Square.GRASS;
-			}
-		}
-	}
-	
-	public void setSheep(Sheep[] sheep){
-		this.sheep = sheep;
-	}
-	
-	public void setPlayer(Player player){
-		this.player = player;
 	}
 	
 	public void setSquareAt(int x, int y, Square sq){
@@ -54,7 +41,6 @@ public class Board implements interfaces.Board {
 	@Override
 	public int getHeight() {
 		return this.height;
-
 	}
 
 	@Override
@@ -62,7 +48,7 @@ public class Board implements interfaces.Board {
 		return this.player;
 	}
 	
-	public Sheep[] getSheep(){
+	public ArrayList<Sheep> getSheep(){
 		return this.sheep;
 	}
 

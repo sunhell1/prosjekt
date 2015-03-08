@@ -9,14 +9,11 @@ public class Sheep implements interfaces.Sheep {
 
 	private Direction direction;
 	private Point location;
-	private Board board;
 	private String name;
 	private Condition con;
 
-	public Sheep(Point point, Direction dir, Board board, Condition condition) {
+	public Sheep(Point point, Condition condition) {
 		this.location = point;
-		this.direction = dir;
-		this.board = board;
 		this.name = "Sheep";
 		this.con = condition;
 
@@ -38,9 +35,6 @@ public class Sheep implements interfaces.Sheep {
 		return this.location;
 	}
 
-	public Board getBoard() {
-		return this.board;
-	}
 
 	public String getName() {
 		return name;
@@ -58,6 +52,12 @@ public class Sheep implements interfaces.Sheep {
 
 	public int getY() {
 		return this.location.y;
+	}
+
+	@Override
+	public Board getBoard() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

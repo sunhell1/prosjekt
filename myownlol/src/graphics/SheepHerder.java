@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import sun.audio.AudioPlayer;
 import javafx.event.EventHandler;
@@ -19,29 +20,35 @@ import javafx.scene.media.MediaPlayer;
 import enums.Condition;
 import enums.Constants;
 import enums.Direction;
-import enums.Levels;
 import implementation.Board;
 import implementation.Player;
 import implementation.Sheep;
+import implementation.Level;
 
 public class SheepHerder extends Scene {
 
 	private Board board;
-	private Sheep[] sheeps;
+	private ArrayList<Sheep> sheeps;
 	private Player herder;
 
 	private boolean winner;
+	
+	private Level level;
 
 	private StartDisplay sd;
 	private WinningDisplay wd;
 	private BoardDisplay bd;
-	
-	private AudioClip theme = new AudioClip(SheepHerder.class.getResource("/media/SheepHerdder.mp3").toString());
-	private AudioClip baa = new AudioClip(SheepHerder.class.getResource("/media/baa.mp3").toString());
+
+	private AudioClip theme = new AudioClip(SheepHerder.class.getResource(
+			"/media/SheepHerdder.mp3").toString());
+	private AudioClip baa = new AudioClip(SheepHerder.class.getResource(
+			"/media/baa.mp3").toString());
 
 	private Group group;
 
 	private int sheepCount;
+	
+	private int levelCount = 1;
 
 	private GUI gui;
 
@@ -52,24 +59,13 @@ public class SheepHerder extends Scene {
 		super(group, width, height);
 
 		this.group = group;
-		
+
 		this.winner = false;
 
 		this.wd = wDisplay;
 		this.sd = sDisplay;
 		this.bd = bDisplay;
-		
-		Sheep sheep1 = new Sheep(new Point(3,5), Direction.EAST, this.board, Condition.ALIVE);
-		Sheep sheep2 = new Sheep(new Point(7,8), Direction.WEST, this.board, Condition.ALIVE);
-		Sheep sheep3 = new Sheep(new Point(5,10), Direction.EAST, this.board, Condition.ALIVE);
-		
-		sheeps = new Sheep[3];
-		sheeps[0] = sheep1;
-		sheeps[1] = sheep2;
-		sheeps[2] = sheep3;
-		
-		this.sheepCount = sheeps.length;
-		
+
 		this.gui = gui;
 
 		startScene();
@@ -93,23 +89,26 @@ public class SheepHerder extends Scene {
 	}
 
 	public void initateGame(int levelNumber) {
+		
+		this.level = new Level(levelCount);
 
+		this.bd = new BoardDisplay(Constants.BOARD_WIDTH,
+				Constants.BOARD_HEIGHT, level);
 		this.group.getChildren().add(bd.getGroup());
-
-		Point sheepPoint = Constants.sheepStartPoint;
-		Point playerPoint = Constants.playerStartPoint;
 
 		this.board = new Board();
 
-		this.herder = new Player(Direction.NORTH, playerPoint, board,
+		this.herder = new Player(Direction.NORTH, level.getHerderStart(), board,
 				Condition.ALIVE);
 
-
-		board.setPlayer(this.herder);
-		board.setSheep(sheeps);
-
+		this.sheepCount = level.getSheepCount();
+		
+		sheeps = level.getLevelSheep();
+		
 		placePlayer();
 		placeSheep();
+		
+		levelCount++;
 
 		this.setOnKeyPressed(event -> keyPressed(event));
 	}
@@ -217,19 +216,22 @@ public class SheepHerder extends Scene {
 	}
 
 	public int gameOver() {
-
 		for (Sheep sheep : sheeps) {
 			if (herder.getLocation().equals(sheep.getLocation())) {
 				baa.play();
-				bd.removeSheep((convertPointToIndex(herder.getLocation())));
+				sheeps.remove(sheep);
+				bd.removeSheep(sheep.getLocation());
+
 				sheepCount--;
+				if (sheepCount == 0) {
+					return 1;
+				}
+
+				return 0;
+
 			}
 		}
-		if (sheepCount == 0){
-			return 1;
-		}
-		
-		else if (herder.getLives() <= 0) {
+		if (herder.getLives() <= 0) {
 			return 2;
 		} else
 			return 0;

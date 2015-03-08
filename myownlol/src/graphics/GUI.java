@@ -1,6 +1,7 @@
 package graphics;
 
 import implementation.Board;
+import implementation.Level;
 import implementation.Player;
 import implementation.Sheep;
 
@@ -41,6 +42,7 @@ public class GUI extends Application {
 	private BoardDisplay bd;
 	private StartDisplay sd;
 	private WinningDisplay wd;
+	private Level level;
 
 	private SheepHerder sheepHerder;
 
@@ -50,7 +52,7 @@ public class GUI extends Application {
 		this.primaryStage = primaryStage;
 
 		this.bd = new BoardDisplay(Constants.BOARD_WIDTH,
-				Constants.BOARD_HEIGHT, Constants.levelOne);
+				Constants.BOARD_HEIGHT, new Level(1));
 		this.sd = new StartDisplay();
 		this.wd = new WinningDisplay();
 

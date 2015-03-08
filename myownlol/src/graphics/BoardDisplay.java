@@ -1,13 +1,19 @@
 package graphics;
 
+import implementation.Level;
+
 import java.awt.Point;
 
 import enums.Square;
+import javafx.animation.PathTransition;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
 
 public class BoardDisplay {
 
@@ -15,35 +21,43 @@ public class BoardDisplay {
 	
 	private Group group;
 
-	private Square[][] board;
+	private Square[][] squares;
 
 	private ImageView herder;
-	private ImageView sheep;
-	private ImageView grass;
+	private ImageView[] sheepArray;
+	private ImageView board;
 
 	private Image herderImage;
 	private Image sheepImage;
-	private Image grassImage;
-
-	private int width;
-	private int height;
+ 
+	private Level level;
+	
+	private int counter = 0;
 
 	final int PREFERRED_DIM = 50;
 
-	public BoardDisplay(int width, int height, Square[][] board) {
+	public BoardDisplay(int width, int height, Level level) {
 
-		this.width = width;
-		this.height = height;
-		this.board = board;
 		
+		this.level = level;
+		this.squares = this.level.getBoardLayout();
+	
 		this.square = new GridPane();
-		TilePane k = new TilePane();
-
+	
 		this.group = new Group(); 
 
-		herderImage = Square.HERDER.getImage();
-		sheepImage = Square.SHEEP.getImage();
-		grassImage = Square.GRASS.getImage();
+		this.herderImage = Square.HERDER.getImage();
+		this.sheepImage = Square.SHEEP.getImage();
+		
+		
+		sheepArray = new ImageView[level.getSheepCount()];
+	
+		for (int i = 0; i < sheepArray.length; i++){
+			sheepArray[i] = new ImageView();
+			sheepArray[i].setFitHeight(PREFERRED_DIM);
+			sheepArray[i].setFitWidth(PREFERRED_DIM);
+			sheepArray[i].setImage(sheepImage);
+		}
 
 		herder = new ImageView();
 		herder.setFitHeight(PREFERRED_DIM);
@@ -60,43 +74,70 @@ public class BoardDisplay {
 
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				grass = new ImageView();
-				grass.setFitHeight(PREFERRED_DIM);
-				grass.setFitWidth(PREFERRED_DIM);
-				grass.setImage(grassImage);
-				square.add(grass, j, i);
+				board = new ImageView();
+				board.setFitHeight(PREFERRED_DIM);
+				board.setFitWidth(PREFERRED_DIM);
+				board.setImage(squares[i][j].getImage());
+				square.add(board, i, j);
 			}
 		}
-		group.getChildren().add(square);
+		group.getChildren().addAll(square);
+		
+		for (ImageView iv : sheepArray){
+			
+			group.getChildren().add(iv);
+		}
+		
+		group.getChildren().add(herder);
+		
 	}
 
 	public void drawHerder(Point p) {
-		square.getChildren().removeAll(herder);
-		square.add(herder, p.x, p.y);
+		herder.setX(p.x * PREFERRED_DIM);
+		herder.setY(p.y * PREFERRED_DIM);
 	}
 
 	public void moveHerder(Point p) {
-		square.getChildren().remove(herder);
-		square.add(herder, p.x, p.y);
+		animateMovement(p.x * PREFERRED_DIM, p.y * PREFERRED_DIM);
+		herder.relocate(p.x * PREFERRED_DIM, p.y * PREFERRED_DIM);
 	}
 	
-	public void removeSheep(int index) {
-		square.getChildren().remove(index);
-		square.getChildren().remove(index);
-		
+	public void removeSheep(Point p) {
+		for (ImageView img : sheepArray) {
+
+			if (img.getX() == p.getX() * PREFERRED_DIM
+					&& img.getY() == p.getY() * PREFERRED_DIM) {
+
+				group.getChildren().remove(img);			
+
+			}
+
+		}
 	}
 
 	public void drawSheep(Point p) {
-		sheep = new ImageView();
-		sheep.setFitHeight(PREFERRED_DIM);
-		sheep.setFitWidth(PREFERRED_DIM);
-		sheep.setImage(sheepImage);
-		square.add(sheep, p.x, p.y);
-		
-//		square.getChildren().removeAll(sheep);
+		sheepArray[counter].setX(p.x * PREFERRED_DIM);
+		sheepArray[counter++].setY(p.y * PREFERRED_DIM);
 	}
+	
+	public void animateMovement(double x, double y){
+		
+		double px = x;
+		double py = y;
+		
+		Path path = new Path();
+		
+		path.getElements().add(new MoveTo(px,py));
+		PathTransition pathTransition = new PathTransition();
+		pathTransition.setDuration(Duration.millis(2000));
+		pathTransition.setPath(path);
+		pathTransition.setNode(herder);
+		pathTransition.play();
+	
+	}
+	
 
-	public GridPane getGridPane() {
+	public GridPane getTilePane() {
 		return this.square;
 	}
 
@@ -104,8 +145,4 @@ public class BoardDisplay {
 		return this.group;
 	}
 	
-	public ImageView getSheep() {
-		return this.sheep;
-	}
-
 }
