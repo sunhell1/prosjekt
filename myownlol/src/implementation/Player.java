@@ -75,8 +75,7 @@ public class Player implements interfaces.Player {
 		if (dir.equals(Direction.NORTH)) {
 			if (board.isLocationOutOfBounds(new Point(p.x + dir.getX(), p.y
 					+ dir.getY()))) {
-
-			
+				this.lives--;
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -85,8 +84,7 @@ public class Player implements interfaces.Player {
 		else if (dir.equals(Direction.SOUTH)) {
 			if (board.isLocationOutOfBounds(new Point(p.x + dir.getX(), p.y
 					+ dir.getY()))) {
-
-				
+				this.lives--;
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -96,8 +94,7 @@ public class Player implements interfaces.Player {
 		else if (dir.equals(Direction.WEST)) {
 			if (board.isLocationOutOfBounds(new Point(p.x + dir.getX(), p.y
 					+ dir.getY()))) {
-
-			
+				this.lives--;
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -107,8 +104,7 @@ public class Player implements interfaces.Player {
 		else if (dir.equals(Direction.EAST)) {
 			if (board.isLocationOutOfBounds(new Point(p.x + dir.getX(), p.y
 					+ dir.getY()))) {
-
-				
+				this.lives--;
 			} 
 			else
 				this.location = new Point(p.x + dir.getX(), p.y + dir.getY());
@@ -118,7 +114,6 @@ public class Player implements interfaces.Player {
 		else
 			throw new IllegalArgumentException(
 					"Provided direction is not a valid direction");
-
 	}
 
 }

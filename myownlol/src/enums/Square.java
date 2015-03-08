@@ -15,7 +15,8 @@ public enum Square {
 	SHEEP(new Image("images/sheep-tile.png")), 
 	HERDER(new Image("images/herder-tile.png")),
 	START_DISPLAY(new Image("images/startdisplay.png")),
-	WINNER_DISPLAY(new Image("images/winnerdisplay.png"));
+	WINNER_DISPLAY(new Image("images/winnerdisplay.png")),
+	LOSER_DISPLAY(new Image("images/loserDisplay.png"));
 	
 	
 

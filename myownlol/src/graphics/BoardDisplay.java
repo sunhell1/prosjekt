@@ -2,10 +2,12 @@ package graphics;
 
 import implementation.Level;
 
+
 import java.awt.Point;
 
 import enums.Square;
 import javafx.animation.PathTransition;
+import javafx.animation.PathTransition.OrientationType;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -32,11 +34,17 @@ public class BoardDisplay {
  
 	private Level level;
 	
+	private PathTransition pathTransition;
+	private Path path;
+	
 	private int counter = 0;
 
 	final int PREFERRED_DIM = 50;
 
 	public BoardDisplay(int width, int height, Level level) {
+		
+		pathTransition = new PathTransition();
+		path = new Path();
 
 		
 		this.level = level;
@@ -89,6 +97,7 @@ public class BoardDisplay {
 		}
 		
 		group.getChildren().add(herder);
+		group.getChildren().add(path);
 		
 	}
 
@@ -111,7 +120,6 @@ public class BoardDisplay {
 				group.getChildren().remove(img);			
 
 			}
-
 		}
 	}
 
@@ -121,19 +129,23 @@ public class BoardDisplay {
 	}
 	
 	public void animateMovement(double x, double y){
-		
+		System.out.println("HER");
 		double px = x;
 		double py = y;
-		
-		Path path = new Path();
-		
+	
 		path.getElements().add(new MoveTo(px,py));
-		PathTransition pathTransition = new PathTransition();
-		pathTransition.setDuration(Duration.millis(2000));
+	
+		
+		pathTransition.setDuration(Duration.millis(5000));
 		pathTransition.setPath(path);
 		pathTransition.setNode(herder);
+		pathTransition.setOrientation(OrientationType.NONE);
+		pathTransition.setCycleCount(1);
+		pathTransition.setAutoReverse(false);
 		pathTransition.play();
-	
+		
+		System.out.println(pathTransition.getNode().toString());
+		System.out.println("DER");
 	}
 	
 

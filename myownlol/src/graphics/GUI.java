@@ -42,6 +42,7 @@ public class GUI extends Application {
 	private BoardDisplay bd;
 	private StartDisplay sd;
 	private WinningDisplay wd;
+	private LoserDisplay ld;
 	private Level level;
 
 	private SheepHerder sheepHerder;
@@ -55,10 +56,11 @@ public class GUI extends Application {
 				Constants.BOARD_HEIGHT, new Level(1));
 		this.sd = new StartDisplay();
 		this.wd = new WinningDisplay();
+		this.ld = new LoserDisplay();
 
 		primaryStage.setTitle("SheepHerder");
 		primaryStage.setScene(new SheepHerder(new Group(), 600, 600, this, wd,
-				sd, bd));
+				sd, bd, ld));
 		primaryStage.show();
 	}
 

@@ -38,6 +38,7 @@ public class SheepHerder extends Scene {
 	private StartDisplay sd;
 	private WinningDisplay wd;
 	private BoardDisplay bd;
+	private LoserDisplay ld;
 
 	private AudioClip theme = new AudioClip(SheepHerder.class.getResource(
 			"/media/SheepHerdder.mp3").toString());
@@ -54,7 +55,7 @@ public class SheepHerder extends Scene {
 
 	public SheepHerder(Group group, int width, int height, GUI gui,
 			WinningDisplay wDisplay, StartDisplay sDisplay,
-			BoardDisplay bDisplay) {
+			BoardDisplay bDisplay, LoserDisplay lDisplay) {
 
 		super(group, width, height);
 
@@ -65,6 +66,7 @@ public class SheepHerder extends Scene {
 		this.wd = wDisplay;
 		this.sd = sDisplay;
 		this.bd = bDisplay;
+		this.ld = lDisplay;
 
 		this.gui = gui;
 
@@ -85,6 +87,12 @@ public class SheepHerder extends Scene {
 		this.group.getChildren().removeAll(wd.getWinningGroup());
 		this.group.getChildren().add(wd.getWinningGroup());
 		wd.getWinningButton().setOnMouseClicked(event -> mouseClicked(event));
+		theme.play();
+	}
+	
+	public void loserScene() {
+		this.group.getChildren().add(ld.getLoserGroup());
+		ld.getLoserButton().setOnMouseClicked(event -> mouseClicked(event));
 		theme.play();
 	}
 
@@ -127,7 +135,7 @@ public class SheepHerder extends Scene {
 					winningScene();
 					break;
 				case 2:
-					winningScene();
+					loserScene();
 					break;
 				default:
 					System.out.println("THIS SHOULD NEVER HAPPEN");
@@ -144,7 +152,7 @@ public class SheepHerder extends Scene {
 					winningScene();
 					break;
 				case 2:
-					winningScene();
+					loserScene();
 					break;
 				default:
 					System.out.println("THIS SHOULD NEVER HAPPEN");
@@ -161,7 +169,7 @@ public class SheepHerder extends Scene {
 					winningScene();
 					break;
 				case 2:
-					winningScene();
+					loserScene();
 					break;
 				default:
 					System.out.println("THIS SHOULD NEVER HAPPEN");
@@ -178,7 +186,7 @@ public class SheepHerder extends Scene {
 					winningScene();
 					break;
 				case 2:
-					winningScene();
+					loserScene();
 					break;
 				default:
 					System.out.println("THIS SHOULD NEVER HAPPEN");
