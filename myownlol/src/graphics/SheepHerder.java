@@ -91,6 +91,7 @@ public class SheepHerder extends Scene {
 	}
 	
 	public void loserScene() {
+		this.group.getChildren().remove(ld.getLoserGroup());
 		this.group.getChildren().add(ld.getLoserGroup());
 		ld.getLoserButton().setOnMouseClicked(event -> mouseClicked(event));
 		theme.play();

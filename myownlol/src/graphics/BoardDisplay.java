@@ -2,10 +2,10 @@ package graphics;
 
 import implementation.Level;
 
-
 import java.awt.Point;
 
 import enums.Square;
+import javafx.animation.FadeTransition;
 import javafx.animation.PathTransition;
 import javafx.animation.PathTransition.OrientationType;
 import javafx.scene.Group;
@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
@@ -20,7 +21,7 @@ import javafx.util.Duration;
 public class BoardDisplay {
 
 	private GridPane square;
-	
+
 	private Group group;
 
 	private Square[][] squares;
@@ -31,36 +32,28 @@ public class BoardDisplay {
 
 	private Image herderImage;
 	private Image sheepImage;
- 
+
 	private Level level;
-	
-	private PathTransition pathTransition;
-	private Path path;
-	
+
 	private int counter = 0;
 
 	final int PREFERRED_DIM = 50;
 
 	public BoardDisplay(int width, int height, Level level) {
-		
-		pathTransition = new PathTransition();
-		path = new Path();
 
-		
 		this.level = level;
 		this.squares = this.level.getBoardLayout();
-	
+
 		this.square = new GridPane();
-	
-		this.group = new Group(); 
+
+		this.group = new Group();
 
 		this.herderImage = Square.HERDER.getImage();
 		this.sheepImage = Square.SHEEP.getImage();
-		
-		
+
 		sheepArray = new ImageView[level.getSheepCount()];
-	
-		for (int i = 0; i < sheepArray.length; i++){
+
+		for (int i = 0; i < sheepArray.length; i++) {
 			sheepArray[i] = new ImageView();
 			sheepArray[i].setFitHeight(PREFERRED_DIM);
 			sheepArray[i].setFitWidth(PREFERRED_DIM);
@@ -77,7 +70,7 @@ public class BoardDisplay {
 
 		square.setPrefHeight(height);
 		square.setPrefWidth(width);
-		
+
 		square.setPrefSize(PREFERRED_DIM * width, PREFERRED_DIM * height);
 
 		for (int i = 0; i < height; i++) {
@@ -90,15 +83,14 @@ public class BoardDisplay {
 			}
 		}
 		group.getChildren().addAll(square);
-		
-		for (ImageView iv : sheepArray){
-			
+
+		for (ImageView iv : sheepArray) {
+
 			group.getChildren().add(iv);
 		}
-		
+
 		group.getChildren().add(herder);
-		group.getChildren().add(path);
-		
+
 	}
 
 	public void drawHerder(Point p) {
@@ -107,17 +99,16 @@ public class BoardDisplay {
 	}
 
 	public void moveHerder(Point p) {
-		animateMovement(p.x * PREFERRED_DIM, p.y * PREFERRED_DIM);
-		herder.relocate(p.x * PREFERRED_DIM, p.y * PREFERRED_DIM);
+		animateMovement(p);
 	}
-	
+
 	public void removeSheep(Point p) {
 		for (ImageView img : sheepArray) {
 
 			if (img.getX() == p.getX() * PREFERRED_DIM
 					&& img.getY() == p.getY() * PREFERRED_DIM) {
 
-				group.getChildren().remove(img);			
+				group.getChildren().remove(img);
 
 			}
 		}
@@ -127,27 +118,48 @@ public class BoardDisplay {
 		sheepArray[counter].setX(p.x * PREFERRED_DIM);
 		sheepArray[counter++].setY(p.y * PREFERRED_DIM);
 	}
-	
-	public void animateMovement(double x, double y){
-		System.out.println("HER");
-		double px = x;
-		double py = y;
-	
-		path.getElements().add(new MoveTo(px,py));
-	
-		
-		pathTransition.setDuration(Duration.millis(5000));
-		pathTransition.setPath(path);
-		pathTransition.setNode(herder);
-		pathTransition.setOrientation(OrientationType.NONE);
-		pathTransition.setCycleCount(1);
-		pathTransition.setAutoReverse(false);
-		pathTransition.play();
-		
-		System.out.println(pathTransition.getNode().toString());
-		System.out.println("DER");
+
+	public void animateMovement(Point p) {
+
+		if (herder.getX() == p.x * PREFERRED_DIM
+				&& herder.getY() == p.y * PREFERRED_DIM) {
+			damageAnimation();
+		} else {
+			movementAnimation(p);
+		}
 	}
-	
+
+	private void movementAnimation(Point p) {
+		Path path = new Path();
+
+		double px = p.x * PREFERRED_DIM;
+		double py = p.y * PREFERRED_DIM;
+
+		path.getElements().add(
+				new MoveTo(herder.getX() + PREFERRED_DIM / 2, herder.getY()
+						+ PREFERRED_DIM / 2));
+		path.getElements().add(
+				new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+
+		PathTransition pathTransition = new PathTransition(
+				Duration.millis(250), path, herder);
+
+		pathTransition.play();
+
+		herder.setX(px);
+		herder.setY(py);
+	}
+
+	private void damageAnimation() {
+		FadeTransition fadeTransition = new FadeTransition(Duration.millis(100), herder);
+		fadeTransition.setFromValue(1);
+		fadeTransition.setToValue(0.1);
+		fadeTransition.setCycleCount(6);
+		fadeTransition.setAutoReverse(true);
+		fadeTransition.play();
+	}
 
 	public GridPane getTilePane() {
 		return this.square;
@@ -156,5 +168,5 @@ public class BoardDisplay {
 	public Group getGroup() {
 		return this.group;
 	}
-	
+
 }
