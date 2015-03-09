@@ -29,6 +29,9 @@ public class Level {
 					level[i][j] = Square.GRASS;
 				}
 			}
+			
+			level[5][5] = Square.BANANA;
+			level[6][6] = Square.BEER;
 
 			Sheep sheep1 = new Sheep(new Point(8, 8), Condition.ALIVE);
 			Sheep sheep2 = new Sheep(new Point(11, 1), Condition.ALIVE);

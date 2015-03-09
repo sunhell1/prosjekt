@@ -40,12 +40,14 @@ public class SheepHerder extends Scene {
 	private BoardDisplay bd;
 	private LoserDisplay ld;
 
-	private AudioClip theme = new AudioClip(SheepHerder.class.getResource(
-			"/media/SheepHerdder.mp3").toString());
-	private AudioClip baa = new AudioClip(SheepHerder.class.getResource(
-			"/media/baa.mp3").toString());
+//	private AudioClip theme = new AudioClip(SheepHerder.class.getResource(
+//			"/media/SheepHerdder.mp3").toString());
+//	private AudioClip baa = new AudioClip(SheepHerder.class.getResource(
+//			"/media/baa.mp3").toString());
 
 	private Group group;
+	
+	private BackgroundDisplay backGround;
 
 	private int sheepCount;
 	
@@ -53,20 +55,20 @@ public class SheepHerder extends Scene {
 
 	private GUI gui;
 
-	public SheepHerder(Group group, int width, int height, GUI gui,
-			WinningDisplay wDisplay, StartDisplay sDisplay,
-			BoardDisplay bDisplay, LoserDisplay lDisplay) {
+	public SheepHerder(Group group, int width, int height, GUI gui) {
 
 		super(group, width, height);
 
 		this.group = group;
+		
+		this.backGround = new BackgroundDisplay();
+		this.group.getChildren().add(backGround.getBackgroundTilePane());
+		
+		this.sd = new StartDisplay();
+		this.wd = new WinningDisplay();
+		this.ld = new LoserDisplay();
 
 		this.winner = false;
-
-		this.wd = wDisplay;
-		this.sd = sDisplay;
-		this.bd = bDisplay;
-		this.ld = lDisplay;
 
 		this.gui = gui;
 
@@ -75,26 +77,21 @@ public class SheepHerder extends Scene {
 	}
 
 	public void startScene() {
-		this.group.getChildren().remove(bd.getGroup());
 		this.group.getChildren().add(sd.getStartGroup());
 		sd.getStartButton().setOnMouseClicked(event -> mouseClicked(event));
-		theme.play();
+	//	theme.play();
 	}
 
 	public void winningScene() {
-		this.group.getChildren().removeAll(bd.getGroup());
-		this.group.getChildren().removeAll(sd.getStartGroup());
-		this.group.getChildren().removeAll(wd.getWinningGroup());
 		this.group.getChildren().add(wd.getWinningGroup());
 		wd.getWinningButton().setOnMouseClicked(event -> mouseClicked(event));
-		theme.play();
+	//	theme.play();
 	}
 	
 	public void loserScene() {
-		this.group.getChildren().remove(ld.getLoserGroup());
 		this.group.getChildren().add(ld.getLoserGroup());
 		ld.getLoserButton().setOnMouseClicked(event -> mouseClicked(event));
-		theme.play();
+	//	theme.play();
 	}
 
 	public void initateGame(int levelNumber) {
@@ -198,10 +195,13 @@ public class SheepHerder extends Scene {
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		bd.getGroup().getChildren().remove(sd.getStartGroup());
-		theme.stop();
+		this.group.getChildren().removeAll(sd.getStartGroup());
+		this.group.getChildren().removeAll(wd.getWinningGroup());
+		this.group.getChildren().removeAll(ld.getLoserGroup());
+	//	theme.stop();
 		int level = 0;
 		initateGame(level++);
+		
 	}
 
 	public int convertPointToIndex(Point p) {
@@ -227,7 +227,7 @@ public class SheepHerder extends Scene {
 	public int gameOver() {
 		for (Sheep sheep : sheeps) {
 			if (herder.getLocation().equals(sheep.getLocation())) {
-				baa.play();
+	//			baa.play();
 				sheeps.remove(sheep);
 				bd.removeSheep(sheep.getLocation());
 
