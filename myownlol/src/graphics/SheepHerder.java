@@ -44,10 +44,6 @@ public class SheepHerder extends Scene {
 			"/media/SheepHerdder.mp3").toString());
 	private AudioClip baa = new AudioClip(SheepHerder.class.getResource(
 			"/media/baa.mp3").toString());
-	
-	//Lyd til damage
-	private AudioClip hurt = new AudioClip(SheepHerder.class.getResource(
-			"/media/herderHurt.mp3").toString());
 
 	private Group group;
 
