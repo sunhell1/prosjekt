@@ -3,6 +3,7 @@ package graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import Sounds.GameSounds;
 import sun.audio.AudioPlayer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -20,16 +21,14 @@ import javafx.scene.media.MediaPlayer;
 import enums.Condition;
 import enums.Constants;
 import enums.Direction;
-import implementation.Board;
-import implementation.Player;
+import implementation.Herder;
 import implementation.Sheep;
 import implementation.Level;
 
 public class SheepHerder extends Scene {
 
-	private Board board;
 	private ArrayList<Sheep> sheeps;
-	private Player herder;
+	private Herder herder;
 
 	private boolean winner;
 
@@ -39,11 +38,6 @@ public class SheepHerder extends Scene {
 	private WinningDisplay wd;
 	private BoardDisplay bd;
 	private LoserDisplay ld;
-
-	private AudioClip theme = new AudioClip(SheepHerder.class.getResource(
-			"/media/SheepHerdder.mp3").toString());
-	private AudioClip baa = new AudioClip(SheepHerder.class.getResource(
-			"/media/baa.mp3").toString());
 
 	private Group group;
 
@@ -68,6 +62,7 @@ public class SheepHerder extends Scene {
 		this.wd = new WinningDisplay();
 		this.ld = new LoserDisplay();
 
+
 		this.winner = false;
 
 		this.gui = gui;
@@ -76,23 +71,23 @@ public class SheepHerder extends Scene {
 
 	}
 
-	public void startScene() {
+	private void startScene() {
 		this.group.getChildren().add(sd.getStartGroup());
 		sd.getStartButton().setOnMouseClicked(event -> mouseClicked(event));
-		theme.play();
+	//	GameSounds.playTheme();
 	}
 
-	public void winningScene() {
+	private void winningScene() {
 		this.group.getChildren().add(wd.getWinningGroup());
 		wd.getWinningButton().setOnMouseClicked(event -> mouseClicked(event));
-		theme.play();
+	//	GameSounds.playTheme();
 	}
 
-	public void loserScene() {
+	private void loserScene() {
 		this.group.getChildren().remove(ld.getLoserGroup());
 		this.group.getChildren().add(ld.getLoserGroup());
 		ld.getLoserButton().setOnMouseClicked(event -> mouseClicked(event));
-		theme.play();
+	//	GameSounds.playTheme();
 	}
 
 	public void initateGame(int levelNumber) {
@@ -103,10 +98,7 @@ public class SheepHerder extends Scene {
 				Constants.BOARD_HEIGHT, level);
 		this.group.getChildren().add(bd.getGroup());
 
-		this.board = new Board();
-
-		this.herder = new Player(Direction.NORTH, level.getHerderStart(),
-				board, Condition.ALIVE);
+		this.herder = new Herder(level.getHerderStart(), Condition.ALIVE, this.level, this.bd);
 
 		this.sheepCount = level.getSheepCount();
 
@@ -125,84 +117,32 @@ public class SheepHerder extends Scene {
 			gui.closePrimary();
 		} else if (e.getCode() == KeyCode.UP) {
 			herder.move(herder.getLocation(), Direction.NORTH);
-			bd.moveHerder(herder.getLocation());
-			int reply = gameOver();
-			if (reply > 0) {
-
-				switch (reply) {
-				case 1:
-					winningScene();
-					break;
-				case 2:
-					loserScene();
-					break;
-				default:
-					System.out.println("THIS SHOULD NEVER HAPPEN");
-					break;
-				}
-			}
-		} else if (e.getCode() == KeyCode.DOWN) {
+			bd.animateMovement(herder.getLocation());		//SKAL INN I HERDER
+			gameFlow();
+		}
+		else if (e.getCode() == KeyCode.DOWN) {
 			herder.move(herder.getLocation(), Direction.SOUTH);
-			bd.moveHerder(herder.getLocation());
-			int reply = gameOver();
-			if (reply > 0) {
-				switch (reply) {
-				case 1:
-					winningScene();
-					break;
-				case 2:
-					loserScene();
-					break;
-				default:
-					System.out.println("THIS SHOULD NEVER HAPPEN");
-					break;
-				}
-			}
+			bd.animateMovement(herder.getLocation());			//SKAL INN I HERDER
+			gameFlow();
 		} else if (e.getCode() == KeyCode.LEFT) {
 			herder.move(herder.getLocation(), Direction.WEST);
-			bd.moveHerder(herder.getLocation());
-			int reply = gameOver();
-			if (reply > 0) {
-				switch (reply) {
-				case 1:
-					winningScene();
-					break;
-				case 2:
-					loserScene();
-					break;
-				default:
-					System.out.println("THIS SHOULD NEVER HAPPEN");
-					break;
-				}
-			}
+			bd.animateMovement(herder.getLocation());			//SKAL INN I HERDER
+			gameFlow();
 		} else if (e.getCode() == KeyCode.RIGHT) {
 			herder.move(herder.getLocation(), Direction.EAST);
-			bd.moveHerder(herder.getLocation());
-			int reply = gameOver();
-			if (reply > 0) {
-				switch (reply) {
-				case 1:
-					winningScene();
-					break;
-				case 2:
-					loserScene();
-					break;
-				default:
-					System.out.println("THIS SHOULD NEVER HAPPEN");
-					break;
-				}
-			}
+			bd.animateMovement(herder.getLocation());			//SKAL INN I HERDER
+			gameFlow();
 		}
 	}
+
 
 	public void mouseClicked(MouseEvent e) {
 		this.group.getChildren().removeAll(sd.getStartGroup());
 		this.group.getChildren().removeAll(wd.getWinningGroup());
 		this.group.getChildren().removeAll(ld.getLoserGroup());
-		theme.stop();
+	//	GameSounds.stopTheme();
 		int level = 0;
 		initateGame(level++);
-
 	}
 
 	public int convertPointToIndex(Point p) {
@@ -226,7 +166,7 @@ public class SheepHerder extends Scene {
 	public int gameOver() {
 		for (Sheep sheep : sheeps) {
 			if (herder.getLocation().equals(sheep.getLocation())) {
-				baa.play();
+	//			GameSounds.playBaa();
 				sheeps.remove(sheep);
 				bd.removeSheep(sheep.getLocation());
 
@@ -243,5 +183,24 @@ public class SheepHerder extends Scene {
 			return 2;
 		} else
 			return 0;
+	}
+	
+
+	private void gameFlow() {
+		int reply = gameOver();
+		if (reply > 0) {
+
+			switch (reply) {
+			case 1:
+				winningScene();
+				break;
+			case 2:
+				loserScene();
+				break;
+			default:
+				System.out.println("THIS SHOULD NEVER HAPPEN");
+				break;
+			}
+		}
 	}
 }

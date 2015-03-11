@@ -97,10 +97,6 @@ public class BoardDisplay {
 		herder.setY(p.y * PREFERRED_DIM);
 	}
 
-	public void moveHerder(Point p) {
-		animateMovement(p);
-	}
-
 	public void removeSheep(Point p) {
 		for (ImageView img : sheepArray) {
 
@@ -118,55 +114,38 @@ public class BoardDisplay {
 		sheepArray[counter++].setY(p.y * PREFERRED_DIM);
 	}
 
-	public void animateMovement(Point p) {
-
-		if (squares[p.y][p.x].equals(Square.BANANA)) {
-			Point pa = new Point(p.x + 1, p.y);
-			bananaAnimation();
-			damageAnimation();
-		}
-		else if (squares[p.y][p.x].equals(Square.BEER)){
-			beerAnimation();
-
-		} else if (herder.getX() == p.x * PREFERRED_DIM
-				&& herder.getY() == p.y * PREFERRED_DIM) {
-			damageAnimation();
-		} else {
-			movementAnimation(p);
-		}
-	}
-	
-	private void beerAnimation() {
-		RotateTransition rotateTransition = new RotateTransition(Duration.millis(1000), group);
+	public void beerAnimation() {
+		RotateTransition rotateTransition = new RotateTransition(
+				Duration.millis(1000), group);
 		rotateTransition.setByAngle(180);
 		rotateTransition.setCycleCount(1);
 		rotateTransition.setAutoReverse(false);
 		rotateTransition.play();
-		
+
 		rotateTransition = new RotateTransition(Duration.millis(1000), herder);
 		rotateTransition.setByAngle(180);
 		rotateTransition.setCycleCount(1);
 		rotateTransition.setAutoReverse(false);
 		rotateTransition.play();
-		
+
 		for (int i = 0; i < sheepArray.length; i++) {
-			rotateTransition = new RotateTransition(Duration.millis(1000), sheepArray[i]);
+			rotateTransition = new RotateTransition(Duration.millis(1000),
+					sheepArray[i]);
 			rotateTransition.setByAngle(180);
 			rotateTransition.setCycleCount(1);
 			rotateTransition.setAutoReverse(false);
 			rotateTransition.play();
 		}
-		
-		rotateTransition = new RotateTransition(Duration.millis(1000), square.getChildren().get(6 * Constants.BOARD_WIDTH +6));
+
+		rotateTransition = new RotateTransition(Duration.millis(1000), square
+				.getChildren().get(6 * Constants.BOARD_WIDTH + 6));
 		rotateTransition.setByAngle(180);
 		rotateTransition.setCycleCount(1);
 		rotateTransition.setAutoReverse(false);
 		rotateTransition.play();
-			
-		}
-	
+	}
 
-	private void bananaAnimation() {
+	public void bananaAnimation() {
 		RotateTransition rotateTransition = new RotateTransition(
 				Duration.millis(1000), herder);
 		rotateTransition.setByAngle(360);
@@ -175,7 +154,7 @@ public class BoardDisplay {
 		rotateTransition.play();
 	}
 
-	private void movementAnimation(Point p) {
+	public void animateMovement(Point p) {
 		Path path = new Path();
 
 		double px = p.x * PREFERRED_DIM;
@@ -198,7 +177,29 @@ public class BoardDisplay {
 		herder.setY(py);
 	}
 
-	private void damageAnimation() {
+	public void animateToStart(Point p) {
+		
+		int px = p.x * PREFERRED_DIM;
+		int py = p.y * PREFERRED_DIM;
+
+		Path path = new Path();
+		path.getElements().add(
+				new MoveTo(herder.getX() + PREFERRED_DIM / 2, herder.getY()
+						+ PREFERRED_DIM / 2));
+		path.getElements().add(new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM/2));
+		path.getElements().add(new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM/2));
+		
+		PathTransition pt = new PathTransition(Duration.millis(1000), path, herder);
+		pt.play();
+		
+		herder.setX(px);
+		herder.setY(py);
+		
+		
+
+	}
+
+	public void damageAnimation() {
 		FadeTransition fadeTransition = new FadeTransition(
 				Duration.millis(100), herder);
 		fadeTransition.setFromValue(1);

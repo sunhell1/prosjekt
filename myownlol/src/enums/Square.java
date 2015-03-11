@@ -19,7 +19,10 @@ public enum Square {
 	LOSER_DISPLAY(new Image("images/loserDisplay.png")),
 	BANANA(new Image("images/banana.png")),
 	BEER(new Image("images/beerbottle.png")),
-	BACKGROUND(new Image("images/backgroundDisplay.png"));
+	BACKGROUND(new Image("images/backgroundDisplay.png")),
+	TREE(new Image("images/tree.png")),
+	HOLE(new Image("images/holeintheground.png")),
+	ROCK(new Image("images/rock.png"));
 	
 	
 

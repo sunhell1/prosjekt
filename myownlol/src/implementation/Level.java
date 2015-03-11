@@ -11,17 +11,16 @@ import enums.Constants;
 public class Level {
 	private ArrayList<Sheep> sheepArray;
 	private Square[][] level;
-	private Player herder;
-	private Board board;
+	private Herder herder;
 	private int sheepcount;
+	private Point herderStart;
 
 	public Level(int levelNumber) {
-		
+
 		this.sheepcount = 0;
-		
-		this.board = new Board();
+
 		this.level = new Square[Constants.BOARD_WIDTH][Constants.BOARD_HEIGHT];
-		
+
 		switch (levelNumber) {
 		case 1:
 			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
@@ -29,7 +28,7 @@ public class Level {
 					level[i][j] = Square.GRASS;
 				}
 			}
-			
+
 			level[5][5] = Square.BANANA;
 			level[6][6] = Square.BEER;
 
@@ -41,11 +40,11 @@ public class Level {
 			sheepArray.add(sheep1);
 			sheepArray.add(sheep2);
 			sheepArray.add(sheep3);
-			
+
 			sheepcount = sheepArray.size();
 
-			herder = new Player(Direction.WEST, new Point(0, 0), this.board,
-					Condition.ALIVE);
+			herderStart = new Point(0,0);
+			
 
 			break;
 		case 2:
@@ -65,16 +64,16 @@ public class Level {
 			sheepArray.add(sheep5);
 			sheepArray.add(sheep6);
 			sheepArray.add(sheep7);
-			
+
 			sheepcount = sheepArray.size();
 
-			herder = new Player(Direction.EAST, new Point(5, 5), board,
-					Condition.ALIVE);
+			herderStart = new Point(5,5);
 
 			break;
 		case 3:
 			break;
-		default: System.out.println("LOL");
+		default:
+			System.out.println("LOL");
 			break;
 		}
 	}
@@ -83,16 +82,20 @@ public class Level {
 		return this.sheepArray;
 	}
 
-
-	public Point getHerderStart() {
-		return this.herder.getLocation();
-	}
-	
-	public Square[][] getBoardLayout(){
+	public Square[][] getBoardLayout() {
 		return this.level;
 	}
-	
+
 	public int getSheepCount() {
 		return this.sheepcount;
+	}
+	
+	public Point getHerderStart(){
+		return this.herderStart;
+	}
+	
+	public Square getSquareAt(Point p){
+	
+		return level[p.y][p.x];
 	}
 }
