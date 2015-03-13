@@ -2,8 +2,15 @@ package graphics;
 
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.effect.Light.Distant;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
 import enums.Square;
 
 public class StartDisplay {
@@ -11,45 +18,60 @@ public class StartDisplay {
 	Group startdisplay;
 
 	Button startButton;
-
-	TilePane tilePane;
-
-	ImageView startImage;
+	Button levelButton;
+	
+	private Media media;
+	
+	private MediaPlayer player;
+	
+	private MediaView view;
+	
+	private Pane display;
 
 	public StartDisplay() {
 
-		this.startdisplay = new Group();
+		startdisplay = new Group();
+		
+		display = new Pane();
+		display.setPrefHeight(650);
+		display.setPrefWidth(800);
 
-		this.startButton = new Button("STARTT");
-
-		this.tilePane = new TilePane();
-
-		this.tilePane = new TilePane();
-		this.tilePane.setHgap(0);
-		this.tilePane.setPrefColumns(1);
-
-		this.startImage = new ImageView();
-		this.startImage.setImage(Square.START_DISPLAY.getImage());
-		this.startImage.setFitHeight(600);
-		this.startImage.setFitWidth(600);
-
-		this.tilePane.getChildren().add(startImage);
-
-		this.startdisplay.getChildren().add(tilePane);
-		this.startdisplay.getChildren().add(startButton);
-
-	}
-
-	public TilePane getTilePane() {
-		return this.tilePane;
+		startButton = new Button("Start");
+		
+		startButton.setPrefHeight(50);
+		startButton.setPrefWidth(100);
+		startButton.setLayoutX(350);
+		startButton.setLayoutY(250);
+		startButton.setStyle("-fx-border: 12px solid;" + "-fx-border-color: black;" + "-fx-background-color: green;");
+		
+		levelButton = new Button("Levels");
+		
+		levelButton.setPrefHeight(50);
+		levelButton.setPrefWidth(100);
+		levelButton.setLayoutX(350);
+		levelButton.setLayoutY(310);
+		levelButton.setStyle("-fx-border: 12px solid;" + "-fx-border-color: black;" + "-fx-background-color: green;");
+		
+		
+		display.getChildren().add(startButton);
+		display.getChildren().add(levelButton);
+		
+		media = new Media(getClass().getResource("/media/intro.mp4").toString());
+		
+		player = new MediaPlayer(media);
+		
+		view = new MediaView(player);
+		
+		this.startdisplay.getChildren().add(view);
+		this.startdisplay.getChildren().add(display);
+		
+		player.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
+		
+		player.play();
 	}
 
 	public Button getStartButton() {
 		return this.startButton;
-	}
-
-	public ImageView getStartImage() {
-		return this.startImage;
 	}
 
 	public Group getStartGroup() {

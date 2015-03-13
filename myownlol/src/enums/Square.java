@@ -14,15 +14,15 @@ public enum Square {
 	GRASS(new Image("images/basic-tile.png")),
 	SHEEP(new Image("images/sheep-tile.png")), 
 	HERDER(new Image("images/herder-tile.png")),
-	START_DISPLAY(new Image("images/startdisplay.png")),
 	WINNER_DISPLAY(new Image("images/winnerdisplay.png")),
 	LOSER_DISPLAY(new Image("images/loserDisplay.png")),
 	BANANA(new Image("images/banana.png")),
 	BEER(new Image("images/beerbottle.png")),
 	BACKGROUND(new Image("images/backgroundDisplay.png")),
-	TREE(new Image("images/tree.png")),
+	TREE(new Image("images/basic-tile.png")),
 	HOLE(new Image("images/holeintheground.png")),
-	ROCK(new Image("images/rock.png"));
+	ROCK(new Image("images/rock.png")),
+	WOLF(new Image("images/wolf-tile.png"));
 	
 	
 

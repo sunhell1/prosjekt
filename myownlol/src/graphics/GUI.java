@@ -15,7 +15,7 @@ public class GUI extends Application {
 		this.primaryStage = primaryStage;
 		
 		primaryStage.setTitle("SheepHerder");
-		primaryStage.setScene(new SheepHerder(new Group(), 600, 600, this));
+		primaryStage.setScene(new SheepHerder(new Group(), 800, 650, this));
 		primaryStage.show();
 	}
 

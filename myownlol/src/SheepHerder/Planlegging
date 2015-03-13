@@ -1,13 +1,8 @@
 Plan - Prioritylist
    
 1. Implement remaining intended features of the game:
-   - Pitfalls
-   - Trees
-   - Rocks
-   - Move back to start position after out of bounds or pitfall. 
    - Retry function to function properly. Edit mouseClicked() method. 
    - Banana and beerbottle should consume on use. 
-   - Move properly after herder steps on a Banana. (+1 tile each direction)
    - Bigger GridPane (Levels) (see if we can have a dynamic size)
    
 2. Implementation after cleanup and fixes (Should be a functioning version)
@@ -15,8 +10,8 @@ Plan - Prioritylist
    - Player Stats. life should be displayed aswell as an inventory. Sheepcounter increment.
    - Beer Animation for drinking a beer.
    - Tree animation
-   -
-   -
-   -
+   - 
+   - 
+   - 
    - Whatever +++
    

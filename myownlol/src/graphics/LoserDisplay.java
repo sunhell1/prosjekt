@@ -20,7 +20,7 @@ public class LoserDisplay {
 
 		this.loserdisplay = new Group();
 
-		this.loserButton = new Button("YOULOSE,AGAIN?");
+		this.loserButton = new Button("RETRY?");
 
 		this.tilePane = new TilePane();
 
