@@ -13,15 +13,18 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class PlayerStats extends HBox {
+public class PlayerStats extends Pane {
 
 	final int height = 50;
 	final int width = 800;
+	
+	private HBox statsBox;
 
 	private Image herderImage;
 
@@ -38,6 +41,15 @@ public class PlayerStats extends HBox {
 	private int sheepCounter;
 
 	public PlayerStats() {
+		
+		this.herderImage = Square.HERDER.getImage();
+
+		this.statsBox = new HBox();
+		this.statsBox.setPrefHeight(height);
+		this.statsBox.setPrefWidth(width);
+		this.statsBox.setBackground(new Background(new BackgroundFill(Color.GREY,
+				CornerRadii.EMPTY, Insets.EMPTY)));
+		this.statsBox.setStyle("-fx-border-color: black;");
 
 		this.setPrefHeight(height);
 		this.setPrefWidth(width);
@@ -52,23 +64,12 @@ public class PlayerStats extends HBox {
 		text.setFont(Font.font("null", FontWeight.SEMI_BOLD, 40));
 		
 		this.sheepCaught = new Text();
-		sheepCaught.setText("Sheep Caught: " + sheepCounter);
-		sheepCaught.setFill(Color.BLACK);
-		sheepCaught.setFont(Font.font("null", FontWeight.SEMI_BOLD, 40));
+		this.sheepCaught.setText("Sheep Caught: " + sheepCounter);
+		this.sheepCaught.setFill(Color.BLACK);
+		this.sheepCaught.setFont(Font.font("null", FontWeight.SEMI_BOLD, 40));
 		
-		DropShadow ds = new DropShadow();
-        ds.setOffsetY(3.0);
-        ds.setOffsetX(3.0);
-        ds.setColor(Color.GRAY);
-		
-		text.setEffect(ds);
-		
-		this.herderImage = Square.HERDER.getImage();
-		
-		this.getChildren().add(this.text);
-		
-		this.setStyle("-fx-border-color: black;");
-		
+		this.statsBox.getChildren().add(this.text);
+
 		this.herder = new ArrayList<ImageView>();
 
 		for (int i = 0; i < Constants.MAX_LIVES; i++) {
@@ -77,17 +78,18 @@ public class PlayerStats extends HBox {
 			player.setFitWidth(50);
 			player.setImage(herderImage);
 			herder.add(player);
-			this.getChildren().add(player);
+			this.statsBox.getChildren().add(player);
 		}
 		
-		this.getChildren().add(sheepCaught);
 		
-		this.setBackground(new Background(new BackgroundFill(Color.GREY,
-				CornerRadii.EMPTY, Insets.EMPTY)));
+		this.getChildren().add(this.statsBox);
+		this.getChildren().add(this.sheepCaught);
+		this.sheepCaught.setLayoutX(490);
+		this.sheepCaught.setLayoutY(37);
 	}
 
 	public void removeLife() {
-		this.getChildren().remove(herder.get(--life));
+		statsBox.getChildren().remove(herder.get(--life));
 	}
 	
 	public void sheepCaught() {
