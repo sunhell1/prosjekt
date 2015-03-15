@@ -141,6 +141,6 @@ public class Level {
 	}
 	
 	public void setSquareAt(Point p, Square sq){
-		level[p.y][p.x] = sq;
+		level[p.x][p.y] = sq;
 	}
 }

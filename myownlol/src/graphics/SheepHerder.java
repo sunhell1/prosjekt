@@ -81,28 +81,29 @@ public class SheepHerder extends Scene {
 	private void startScene() {
 		this.group.getChildren().add(sd.getStartGroup());
 		sd.getStartButton().setOnMouseClicked(event -> mouseClicked(event, "NEW"));
-		GameSounds.playTheme();
+	//	GameSounds.playTheme();
 	}
 
 	private void winningScene() {
 		this.group.getChildren().add(wd.getWinningGroup());
 		wd.getWinningButton().setOnMouseClicked(event -> mouseClicked(event, "NEW"));
-		GameSounds.playTheme();
+	//	GameSounds.playTheme();
 	}
 
 	private void loserScene() {
 		this.group.getChildren().remove(ld.getLoserGroup());
 		this.group.getChildren().add(ld.getLoserGroup());
 		ld.getLoserButton().setOnMouseClicked(event -> mouseClicked(event, "RETRY"));
-		GameSounds.playTheme();
+	//	GameSounds.playTheme();
 	}
 
 	public void initateGame(int levelNumber) {
+	
 		
-		this.statsDisplay = new PlayerStats();
-		statsDisplay.relocate(0, 600);
 
 		this.level = new Level(levelCount);
+		this.statsDisplay = new PlayerStats(this.level);
+		statsDisplay.relocate(0, 600);
 
 		this.bd = new BoardDisplay(Constants.BOARD_WIDTH,
 				Constants.BOARD_HEIGHT, level);
@@ -152,6 +153,9 @@ public class SheepHerder extends Scene {
 			herder.move(herder.getLocation(), Direction.EAST);
 			wolf.moveWolf(level.getWolfStack().pop());
 			gameFlow();
+		} else if (e.getCode() == KeyCode.SPACE) {
+			if (herder.getItemEquipped().equals(""))
+			bd.smackAnimation();
 		}
 	}
 
@@ -161,7 +165,7 @@ public class SheepHerder extends Scene {
 		this.group.getChildren().removeAll(sd.getStartGroup());
 		this.group.getChildren().removeAll(wd.getWinningGroup());
 		this.group.getChildren().removeAll(ld.getLoserGroup());
-		GameSounds.stopTheme();
+	//	GameSounds.stopTheme();
 		
 		this.state = state;
 		
@@ -217,8 +221,10 @@ public class SheepHerder extends Scene {
 			if (herder.getLocation().equals(sheep.getLocation())
 					|| wolf.getWolfPosition().equals(sheep.getLocation())) {
 				if (herder.getLocation().equals(sheep.getLocation())) {
-					GameSounds.playBaa();
+			//		GameSounds.playBaa();
 					this.statsDisplay.sheepCaught();
+					this.statsDisplay.animateSheepCaughtText();
+					System.out.println(this.statsDisplay.getSheepCaught());
 					sheeps.remove(sheep);
 					bd.removeSheep(sheep.getLocation());
 

@@ -6,10 +6,17 @@ import java.awt.Point;
 
 import enums.Constants;
 import enums.Square;
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.PathTransition;
 import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
+import javafx.animation.TimelineBuilder;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,11 +41,13 @@ public class BoardDisplay {
 	private ImageView[] board;
 	private ImageView[] trees;
 
-
 	private Image herderImage;
 	private Image sheepImage;
 	private Image wolfImage;
 	private Image treeImage;
+	private Image herderPickingRock;
+	private Image herderPickAxe;
+	private Image herderSmack;
 
 	private Level level;
 
@@ -59,11 +68,14 @@ public class BoardDisplay {
 		this.herderImage = Square.HERDER.getImage();
 		this.sheepImage = Square.SHEEP.getImage();
 		this.wolfImage = Square.WOLF.getImage();
-		this.treeImage = new Image("images/tree.png");
+		this.treeImage = Square.TREE_IMAGE.getImage();
+		this.herderPickingRock = Square.HERDER_PICKAXE.getImage();
+		this.herderPickAxe = Square.PICKAXE.getImage();
+		this.herderSmack = Square.HERDER_SMACK.getImage();
 
 		sheepArray = new ImageView[level.getSheepCount()];
 		trees = new ImageView[level.getTreeCount()];
-		
+
 		for (int i = 0; i < trees.length; i++) {
 			trees[i] = new ImageView();
 			trees[i].setFitHeight(PREFERRED_DIM);
@@ -82,7 +94,7 @@ public class BoardDisplay {
 		herder.setFitHeight(PREFERRED_DIM);
 		herder.setFitWidth(PREFERRED_DIM);
 		herder.setImage(herderImage);
-		
+
 		wolf = new ImageView();
 		wolf.setFitHeight(PREFERRED_DIM);
 		wolf.setFitWidth(PREFERRED_DIM);
@@ -95,21 +107,21 @@ public class BoardDisplay {
 		square.setPrefWidth(width);
 
 		square.setPrefSize(PREFERRED_DIM * width, PREFERRED_DIM * height);
-		
+
 		board = new ImageView[Constants.BOARD_HEIGHT * Constants.BOARD_WIDTH];
-		
+
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				Point p = new Point(i,j);
+				Point p = new Point(i, j);
 				board[convertPointToIndex(p)] = new ImageView();
 				board[convertPointToIndex(p)].setFitHeight(PREFERRED_DIM);
 				board[convertPointToIndex(p)].setFitWidth(PREFERRED_DIM);
-				board[convertPointToIndex(p)].setImage(squares[i][j].getImage());
+				board[convertPointToIndex(p)]
+						.setImage(squares[i][j].getImage());
 				square.add(board[convertPointToIndex(p)], i, j);
 			}
 		}
-		
-		
+
 		group.getChildren().addAll(square);
 
 		for (ImageView iv : sheepArray) {
@@ -126,12 +138,12 @@ public class BoardDisplay {
 		herder.setX(p.x * PREFERRED_DIM);
 		herder.setY(p.y * PREFERRED_DIM);
 	}
-	
+
 	public void drawWolf(Point p) {
 		wolf.setX(p.x * PREFERRED_DIM);
 		wolf.setY(p.y * PREFERRED_DIM);
 	}
-	
+
 	public void drawTrees(Point p) {
 		trees[treeCounter].setX(p.x * PREFERRED_DIM);
 		trees[treeCounter++].setY(p.y * PREFERRED_DIM);
@@ -177,20 +189,14 @@ public class BoardDisplay {
 			rotateTransition.play();
 		}
 
-//		rotateTransition = new RotateTransition(Duration.millis(1000), square
-//				.getChildren().get(6 * Constants.BOARD_WIDTH + 6));
-//		rotateTransition.setByAngle(180);
-//		rotateTransition.setCycleCount(1);
-//		rotateTransition.setAutoReverse(false);
-//		rotateTransition.play();
-		
-		for (int i = 0; i < treeCounter; i++){
-			rotateTransition = new RotateTransition(Duration.millis(1000), trees[i]);
+		for (int i = 0; i < treeCounter; i++) {
+			rotateTransition = new RotateTransition(Duration.millis(1000),
+					trees[i]);
 			rotateTransition.setByAngle(180);
 			rotateTransition.setCycleCount(1);
 			rotateTransition.setAutoReverse(false);
-			rotateTransition.play();	
-		}	
+			rotateTransition.play();
+		}
 	}
 
 	public void bananaAnimation() {
@@ -224,40 +230,65 @@ public class BoardDisplay {
 		herder.setX(px);
 		herder.setY(py);
 	}
-	
-	public void animateWolfMovement(Point p){
+
+	public void animateWolfMovement(Point p) {
 		Path path = new Path();
 		double px = p.x * PREFERRED_DIM;
 		double py = p.y * PREFERRED_DIM;
-		
-		path.getElements().add(new MoveTo(wolf.getX() + PREFERRED_DIM / 2, wolf.getY() + PREFERRED_DIM / 2));
-		path.getElements().add(new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
-		path.getElements().add(new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
-		
+
+		path.getElements().add(
+				new MoveTo(wolf.getX() + PREFERRED_DIM / 2, wolf.getY()
+						+ PREFERRED_DIM / 2));
+		path.getElements().add(
+				new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+
 		PathTransition pt = new PathTransition(Duration.millis(250), path, wolf);
 		pt.play();
-		
+
 		wolf.setX(px);
 		wolf.setY(py);
 	}
 
 	public void animateToStart(Point p) {
-		
-		int px = p.x * PREFERRED_DIM;
-		int py = p.y * PREFERRED_DIM;
 
-		Path path = new Path();
-		path.getElements().add(
-				new MoveTo(herder.getX() + PREFERRED_DIM / 2, herder.getY()
-						+ PREFERRED_DIM / 2));
-		path.getElements().add(new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM/2));
-		path.getElements().add(new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM/2));
-		
-		PathTransition pt = new PathTransition(Duration.millis(1000), path, herder);
-		pt.play();
-		
-		herder.setX(px);
-		herder.setY(py);
+		if (herder.getX() == 0 && herder.getY() == 0) {
+			System.out.println("STARTAREA");
+
+			Path path = new Path();
+			path.getElements().add(new MoveTo(0, 0));
+			path.getElements().add(new LineTo(25, 25));
+			path.getElements().add(new MoveTo(25, 25));
+
+			PathTransition pt = new PathTransition(Duration.millis(1000), path,
+					herder);
+			pt.play();
+
+			herder.setX(0);
+			herder.setY(0);
+		}
+
+		else {
+			int px = p.x * PREFERRED_DIM;
+			int py = p.y * PREFERRED_DIM;
+
+			Path path = new Path();
+			path.getElements().add(
+					new MoveTo(herder.getX() + PREFERRED_DIM / 2, herder.getY()
+							+ PREFERRED_DIM / 2));
+			path.getElements().add(
+					new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+			path.getElements().add(
+					new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+
+			PathTransition pt = new PathTransition(Duration.millis(1000), path,
+					herder);
+			pt.play();
+
+			herder.setX(px);
+			herder.setY(py);
+		}
 	}
 
 	public void damageAnimation() {
@@ -269,10 +300,81 @@ public class BoardDisplay {
 		fadeTransition.setAutoReverse(true);
 		fadeTransition.play();
 	}
-	
-	
-	public void updateSquareAt(Point p){
-		this.board[convertPointToIndex(p)].setImage(level.getSquareAt(p).getImage());
+
+	public void pickRockAnimation() {
+		Timeline timeline = new Timeline();
+		timeline.setCycleCount(2);
+		timeline.setAutoReverse(true);
+		KeyFrame kf = new KeyFrame(Duration.millis(200),
+				new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						changeHerderImage(herderPickingRock);
+					}
+				});
+
+		KeyFrame kk = new KeyFrame(Duration.millis(400),
+				new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						changeHerderImage(herderPickAxe);
+					}
+
+				});
+		timeline.getKeyFrames().add(kf);
+		timeline.getKeyFrames().add(kk);
+		timeline.play();
+
+		timeline.setOnFinished(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				changeHerderImage(herderPickAxe);
+
+			}
+
+		});
+	}
+
+	public void smackAnimation() {
+		Timeline smackLine = new Timeline();
+		smackLine.setCycleCount(1);
+		smackLine.setAutoReverse(true);
+
+		KeyFrame smack = new KeyFrame(Duration.millis(0),
+				new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						changeHerderImage(herderSmack);
+					}
+
+				});
+		
+		KeyFrame reset = new KeyFrame(Duration.millis(100),
+				new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						changeHerderImage(herderImage);
+					}
+
+				});
+		smackLine.getKeyFrames().add(smack);
+		smackLine.getKeyFrames().add(reset);
+		smackLine.play();
+
+	}
+
+	public void updateSquareAt(Point p, Square sq) {
+		square.getChildren().remove(board[convertPointToIndex(p)]);
+		board[convertPointToIndex(p)] = new ImageView();
+		board[convertPointToIndex(p)].setFitHeight(PREFERRED_DIM);
+		board[convertPointToIndex(p)].setFitWidth(PREFERRED_DIM);
+		board[convertPointToIndex(p)].setImage(sq.getImage());
+		square.add(board[convertPointToIndex(p)], p.x, p.y);
 	}
 
 	public GridPane getGridPane() {
@@ -282,13 +384,17 @@ public class BoardDisplay {
 	public Group getGroup() {
 		return this.group;
 	}
-	
-	private int convertPointToIndex(Point p) {
-		
-		int a = (p.y * Constants.BOARD_WIDTH) + p.x;
-		
-		return a;	
 
+	private int convertPointToIndex(Point p) {
+
+		int a = (p.y * Constants.BOARD_WIDTH) + p.x;
+
+		return a;
+
+	}
+
+	public void changeHerderImage(Image img) {
+		herder.setImage(img);
 	}
 
 }

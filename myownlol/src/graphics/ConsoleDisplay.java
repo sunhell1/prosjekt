@@ -1,16 +1,17 @@
 package graphics;
 
 import implementation.Herder;
+
 import implementation.Item;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -18,10 +19,12 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-public class ConsoleDisplay extends VBox {
+public class ConsoleDisplay extends Pane {
 
 	private final int height = 600;
 	private final int width = 200;
+	private int layY;
+	
 	private Text text;
 	private Herder herder;
 
@@ -34,6 +37,8 @@ public class ConsoleDisplay extends VBox {
 
 		this.setBackground(new Background(new BackgroundFill(Color.GRAY,
 				CornerRadii.EMPTY, Insets.EMPTY)));
+		
+		VBox vbox = new VBox();
 
 		Text string1 = new Text();
 		string1.setFont(new Font(25));
@@ -45,49 +50,26 @@ public class ConsoleDisplay extends VBox {
 		string2.setFont(new Font(20));
 		string2.setText("          ");
 		string2.setTextAlignment(TextAlignment.CENTER);
+		
+		vbox.getChildren().add(string1);
+		vbox.getChildren().add(string2);
 
-		this.getChildren().add(string1);
-		this.getChildren().add(string2);
-
+		this.getChildren().add(vbox);
+		
 		this.setStyle("-fx-border-color: black;");
+		
+		layY = 100;
 
 	}
 
-	private void mouseClicked(MouseEvent event, String string) {
+	public void mouseClicked(MouseEvent event, String string) {
 
-		if (!herder.isEquipped()) {
+		if (!herder.isEquipped(string)) {
 			herder.equip(string);
 		}
 
 		else {
-			this.getChildren().remove(text);
-
-			this.text = new Text();
-			text.setText("You already have this item equipped");
-			text.setFont(new Font(20));
-			text.setWrappingWidth(width);
-			text.setTextAlignment(TextAlignment.CENTER);
-
-			this.getChildren().add(text);
-
-			FadeTransition fadeTransition = new FadeTransition(
-					Duration.millis(500), text);
-			fadeTransition.setFromValue(1);
-			fadeTransition.setToValue(0.1);
-			fadeTransition.setCycleCount(5);
-			fadeTransition.setAutoReverse(true);
-			fadeTransition.play();
-
-			fadeTransition.setOnFinished(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent arg0) {
-
-					text.setVisible(false);
-					text.setDisable(true);
-
-				}
-
-			});
+			herder.unEquip();
 		}
 
 	}
@@ -100,7 +82,14 @@ public class ConsoleDisplay extends VBox {
 		text.setWrappingWidth(width);
 		text.setTextAlignment(TextAlignment.CENTER);
 		text.setOnMouseClicked(event -> mouseClicked(event, item.getName()));
+		
+		VBox vbox = new VBox();
+		vbox.getChildren().add(text);
 
-		this.getChildren().add(text);
+		vbox.setLayoutY(layY);
+		
+		layY += 25;
+
+		this.getChildren().add(vbox);
 	}
 }

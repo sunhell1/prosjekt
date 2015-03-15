@@ -54,9 +54,10 @@ public class Constants {
 		level[7][10] = Square.ROCK;
 		level[7][11] = Square.ROCK;
 		
-		
 		return level;
 	}
+	
+	
 }
 
 

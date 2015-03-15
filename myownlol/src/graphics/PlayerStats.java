@@ -1,10 +1,13 @@
 package graphics;
 
+import implementation.Level;
+
 import java.util.ArrayList;
 import java.util.concurrent.locks.AbstractQueuedLongSynchronizer.ConditionObject;
 
 import enums.Constants;
 import enums.Square;
+import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -18,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class PlayerStats extends Pane {
 
@@ -39,10 +43,14 @@ public class PlayerStats extends Pane {
 	private Text sheepCaught;
 	
 	private int sheepCounter;
+	
+	private Level level;
 
-	public PlayerStats() {
+	public PlayerStats(Level level) {
 		
 		this.herderImage = Square.HERDER.getImage();
+		
+		this.level = level;
 
 		this.statsBox = new HBox();
 		this.statsBox.setPrefHeight(height);
@@ -56,19 +64,19 @@ public class PlayerStats extends Pane {
 		
 		this.life = Constants.MAX_LIVES;
 		
-		this.sheepCounter = 0;
+		this.sheepCounter = level.getSheepCount();
 		
 		this.text = new Text();
-		text.setText("Health : ");
+		text.setText("Health: ");
 		text.setFill(Color.BLACK);
 		text.setFont(Font.font("null", FontWeight.SEMI_BOLD, 40));
 		
-		this.sheepCaught = new Text();
-		this.sheepCaught.setText("Sheep Caught: " + sheepCounter);
-		this.sheepCaught.setFill(Color.BLACK);
-		this.sheepCaught.setFont(Font.font("null", FontWeight.SEMI_BOLD, 40));
-		
 		this.statsBox.getChildren().add(this.text);
+		
+		this.sheepCaught = new Text();
+		this.sheepCaught.setText("Sheep remaining: " + sheepCounter);
+		this.sheepCaught.setFill(Color.BLACK);
+		this.sheepCaught.setFont(Font.font("null", FontWeight.BOLD, 25));
 
 		this.herder = new ArrayList<ImageView>();
 
@@ -84,7 +92,7 @@ public class PlayerStats extends Pane {
 		
 		this.getChildren().add(this.statsBox);
 		this.getChildren().add(this.sheepCaught);
-		this.sheepCaught.setLayoutX(490);
+		this.sheepCaught.setLayoutX(500);
 		this.sheepCaught.setLayoutY(37);
 	}
 
@@ -93,6 +101,29 @@ public class PlayerStats extends Pane {
 	}
 	
 	public void sheepCaught() {
-		++this.sheepCounter;
+		this.getChildren().remove(this.sheepCaught);
+		--this.sheepCounter;
+		this.sheepCaught = new Text();
+		this.sheepCaught.setText("Sheep remaining: " + sheepCounter);
+		this.sheepCaught.setFill(Color.BLACK);
+		this.sheepCaught.setFont(Font.font("null", FontWeight.BOLD, 25));
+		
+		this.getChildren().add(sheepCaught);
+		this.sheepCaught.setLayoutX(500);
+		this.sheepCaught.setLayoutY(37);
+	}
+	
+	public int getSheepCaught() {
+		return this.sheepCounter;
+	}
+	
+	public void animateSheepCaughtText() {
+		FadeTransition fadeTransition = new FadeTransition(
+				Duration.millis(100), this.sheepCaught);
+		fadeTransition.setFromValue(1);
+		fadeTransition.setToValue(0.1);
+		fadeTransition.setCycleCount(6);
+		fadeTransition.setAutoReverse(true);
+		fadeTransition.play();
 	}
 }
