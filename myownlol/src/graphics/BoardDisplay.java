@@ -42,7 +42,6 @@ public class BoardDisplay {
 	private Square[][] squares;
 
 	private ImageView herder;
-	private ImageView[] sheepArray;
 	private ImageView wolf;
 	private ImageView[] board;
 	private ImageView[] trees;
@@ -83,7 +82,6 @@ public class BoardDisplay {
 		this.hfence = Square.HFENCE.getImage();
 		this.vfence = Square.VFENCE.getImage();
 
-		sheepArray = new ImageView[level.getSheepCount()];
 		trees = new ImageView[level.getTreeCount()];
 
 		for (int i = 0; i < trees.length; i++) {
@@ -93,12 +91,12 @@ public class BoardDisplay {
 			trees[i].setImage(treeImage);
 		}
 
-		for (int i = 0; i < sheepArray.length; i++) {
-			sheepArray[i] = new ImageView();
-			sheepArray[i].setFitHeight(PREFERRED_DIM);
-			sheepArray[i].setFitWidth(PREFERRED_DIM);
-			sheepArray[i].setImage(sheepImage);
-		}
+//		for (int i = 0; i < sheepArray.length; i++) {
+//			sheepArray[i] = new ImageView();
+//			sheepArray[i].setFitHeight(PREFERRED_DIM);
+//			sheepArray[i].setFitWidth(PREFERRED_DIM);
+//			sheepArray[i].setImage(sheepImage);
+//		}
 
 		herder = new ImageView();
 		herder.setFitHeight(PREFERRED_DIM);
@@ -134,9 +132,6 @@ public class BoardDisplay {
 
 		group.getChildren().addAll(square);
 
-		for (ImageView iv : sheepArray) {
-			group.getChildren().add(iv);
-		}
 		for (ImageView iv : trees) {
 			group.getChildren().add(iv);
 		}
@@ -162,64 +157,61 @@ public class BoardDisplay {
 		trees[treeCounter++].setY(p.y * PREFERRED_DIM);
 	}
 
-	public void removeSheep(Point p) {
-		for (ImageView img : sheepArray) {
+//	public void removeSheep(Point p) {
+//		for (ImageView img : sheepArray) {
+//
+//			if (img.getX() == p.getX() * PREFERRED_DIM
+//					&& img.getY() == p.getY() * PREFERRED_DIM) {
+//
+//				group.getChildren().remove(img);
+//
+//			}
+//		}
+//	}
 
-			if (img.getX() == p.getX() * PREFERRED_DIM
-					&& img.getY() == p.getY() * PREFERRED_DIM) {
 
-				group.getChildren().remove(img);
 
-			}
-		}
-	}
+//	public void beerAnimation() {
+//		RotateTransition rotateTransition = new RotateTransition(
+//				Duration.millis(1000), group);
+//		rotateTransition.setByAngle(180);
+//		rotateTransition.setCycleCount(1);
+//		rotateTransition.setAutoReverse(false);
+//		rotateTransition.play();
+//
+//		rotateTransition = new RotateTransition(Duration.millis(1000), herder);
+//		rotateTransition.setByAngle(180);
+//		rotateTransition.setCycleCount(1);
+//		rotateTransition.setAutoReverse(false);
+//		rotateTransition.play();
+//
+//		for (int i = 0; i < sheepArray.length; i++) {
+//			rotateTransition = new RotateTransition(Duration.millis(1000),
+//					sheepArray[i]);
+//			rotateTransition.setByAngle(180);
+//			rotateTransition.setCycleCount(1);
+//			rotateTransition.setAutoReverse(false);
+//			rotateTransition.play();
+//		}
+//
+//		for (int i = 0; i < treeCounter; i++) {
+//			rotateTransition = new RotateTransition(Duration.millis(1000),
+//					trees[i]);
+//			rotateTransition.setByAngle(180);
+//			rotateTransition.setCycleCount(1);
+//			rotateTransition.setAutoReverse(false);
+//			rotateTransition.play();
+//		}
+//	}
 
-	public void drawSheep(Point p) {
-		sheepArray[sheepCounter].setX(p.x * PREFERRED_DIM);
-		sheepArray[sheepCounter++].setY(p.y * PREFERRED_DIM);
-	}
-
-	public void beerAnimation() {
-		RotateTransition rotateTransition = new RotateTransition(
-				Duration.millis(1000), group);
-		rotateTransition.setByAngle(180);
-		rotateTransition.setCycleCount(1);
-		rotateTransition.setAutoReverse(false);
-		rotateTransition.play();
-
-		rotateTransition = new RotateTransition(Duration.millis(1000), herder);
-		rotateTransition.setByAngle(180);
-		rotateTransition.setCycleCount(1);
-		rotateTransition.setAutoReverse(false);
-		rotateTransition.play();
-
-		for (int i = 0; i < sheepArray.length; i++) {
-			rotateTransition = new RotateTransition(Duration.millis(1000),
-					sheepArray[i]);
-			rotateTransition.setByAngle(180);
-			rotateTransition.setCycleCount(1);
-			rotateTransition.setAutoReverse(false);
-			rotateTransition.play();
-		}
-
-		for (int i = 0; i < treeCounter; i++) {
-			rotateTransition = new RotateTransition(Duration.millis(1000),
-					trees[i]);
-			rotateTransition.setByAngle(180);
-			rotateTransition.setCycleCount(1);
-			rotateTransition.setAutoReverse(false);
-			rotateTransition.play();
-		}
-	}
-
-	public void bananaAnimation() {
-		RotateTransition rotateTransition = new RotateTransition(
-				Duration.millis(1000), herder);
-		rotateTransition.setByAngle(360);
-		rotateTransition.setCycleCount(1);
-		rotateTransition.setAutoReverse(true);
-		rotateTransition.play();
-	}
+//	public void bananaAnimation() {
+//		RotateTransition rotateTransition = new RotateTransition(
+//				Duration.millis(1000), herder);
+//		rotateTransition.setByAngle(360);
+//		rotateTransition.setCycleCount(1);
+//		rotateTransition.setAutoReverse(true);
+//		rotateTransition.play();
+//	}
 
 	public void animateMovement(Point p) {
 		Path path = new Path();
@@ -408,6 +400,45 @@ public class BoardDisplay {
 	public void changeHerderImage(Image img) {
 		herder.setImage(img);
 	}
+
+	public void animateSheepMovement(Point location, Point destination) {
+
+		this.level.setSquareAt(location, Square.GRASS);
+		this.level.setSquareAt(destination, Square.BIGSHEEP);
+		
+		ImageView iv = new ImageView();
+		iv.setFitWidth(PREFERRED_DIM);
+		iv.setFitHeight(PREFERRED_DIM);
+		iv.setImage(sheepImage);
+
+		Path path = new Path();
+		path.getElements().add(
+				new MoveTo(location.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						location.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new LineTo(destination.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						destination.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new MoveTo(destination.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						destination.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+		
+		PathTransition pt = new PathTransition(Duration.millis(100), path, iv);
+		
+		pt.play();
+		
+		pt.setOnFinished(new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				iv.setDisable(true);
+				iv.setVisible(false);	
+				updateSquareAt(location, Square.GRASS);
+				updateSquareAt(destination, Square.BIGSHEEP);
+				
+			}
+		});
+	}
+	
 
 	public void chatDisplay(String stringtext) {
 

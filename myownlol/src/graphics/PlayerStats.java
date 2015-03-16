@@ -64,7 +64,7 @@ public class PlayerStats extends Pane {
 		
 		this.life = Constants.MAX_LIVES;
 		
-		this.sheepCounter = level.getSheepCount() + level.getBabySheepCount();
+		this.sheepCounter = level.getBigSheepCount() + level.getBabySheepCount();
 		
 		this.text = new Text();
 		text.setText("Health: ");

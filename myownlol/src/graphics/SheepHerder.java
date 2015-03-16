@@ -31,7 +31,7 @@ import implementation.Wolf;
 
 public class SheepHerder extends Scene {
 
-	private ArrayList<Sheep> sheeps;
+	// private ArrayList<Sheep> sheeps;
 	private Herder herder;
 	private Wolf wolf;
 
@@ -113,7 +113,7 @@ public class SheepHerder extends Scene {
 		this.herder = new Herder(level.getHerderStart(), Condition.ALIVE,
 				this.level, this.bd, this.statsDisplay);
 
-		this.sheepCount = level.getSheepCount() + level.getBabySheepCount();
+		this.sheepCount = level.getBigSheepCount() + level.getBabySheepCount();
 
 		this.group.getChildren().add(herder.getGroup());
 		this.group.getChildren().add(bd.getGroup());
@@ -122,10 +122,6 @@ public class SheepHerder extends Scene {
 		if (level.hasWolf()) {
 			this.wolf = new Wolf(level.getWolfStart(), Condition.ALIVE, this.bd);
 			placeWolf();
-		}
-		if (level.hasSheep()) {
-			sheeps = level.getLevelSheep();
-			placeSheep();
 		}
 
 		placePlayer();
@@ -162,8 +158,13 @@ public class SheepHerder extends Scene {
 			}
 			gameFlow();
 		} else if (e.getCode() == KeyCode.SPACE) {
-			if (herder.getItemEquipped().equals(""))
+			if (herder.getItemEquipped().equals("")) {
+				herder.smackSheep(herder.getLocation());
 				bd.smackAnimation();
+				if (sheepFenced()){
+					gameFlow();
+				}
+			}
 		} else if (e.getCode() == KeyCode.D) {
 			if (herder.isStandingNextToSheep(herder.getLocation())) {
 				herder.pickUpSheep();
@@ -198,11 +199,11 @@ public class SheepHerder extends Scene {
 		bd.drawHerder(herder.getLocation());
 	}
 
-	public void placeSheep() {
-		for (Sheep sheep : sheeps) {
-			bd.drawSheep(sheep.getLocation());
-		}
-	}
+	// public void placeSheep() {
+	// for (Sheep sheep : sheeps) {
+	// bd.drawSheep(sheep.getLocation());
+	// }
+	// }
 
 	public void placeTrees() {
 		Square[][] levelSquares = level.getBoardLayout();
@@ -232,26 +233,13 @@ public class SheepHerder extends Scene {
 		if (sheepCount == 0) {
 			return 1;
 		}
-		if (level.hasSheep()) {
-			for (Sheep sheep : sheeps) {
-				if (herder.getLocation().equals(sheep.getLocation())) {
-					GameSounds.playBaa();
-					this.statsDisplay.sheepCaught();
-					this.statsDisplay.animateSheepCaughtText();
-					sheeps.remove(sheep);
-					bd.removeSheep(sheep.getLocation());
 
-					sheepCount--;
-					if (sheepCount == 0) {
-						return 1;
-					}
-					return 0;
-				} else if (level.hasWolf()) {
-					if (wolf.getWolfPosition().equals(sheep.getLocation())) {
-						return 2;
-					}
-				}
-
+		if (level.hasWolf()) {
+			if (level.getSquareAt(wolf.getWolfPosition()).equals(
+					Square.BABYSHEEP)
+					|| level.getSquareAt(wolf.getWolfPosition()).equals(
+							Square.BIGSHEEP)) {
+				return 2;
 			}
 		}
 
@@ -261,10 +249,26 @@ public class SheepHerder extends Scene {
 			}
 		}
 
+
 		if (herder.getLives() <= 0) {
 			return 2;
 		} else
 			return 0;
+	}
+	
+	private boolean sheepFenced() {
+		if (level.hasFencePoint()) {
+			if (level.getSquareAt(level.getFencePoint())
+					.equals(Square.BIGSHEEP)) {
+				sheepCount--;
+				GameSounds.playBaa();
+				statsDisplay.sheepCaught();
+				level.setSquareAt(level.getFencePoint(), Square.GRASS);
+				bd.updateSquareAt(level.getFencePoint(), Square.GRASS);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void gameFlow() {

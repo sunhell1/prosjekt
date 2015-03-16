@@ -15,7 +15,6 @@ public class Constants {
 				level[i][j] = Square.GRASS;
 			}
 		}
-		
 		level[4][0] = Square.TREE;
 		level[5][0] = Square.TREE;
 		level[6][0] = Square.TREE;
@@ -82,10 +81,13 @@ public class Constants {
 		level[11][7] = Square.TREE;
 		level[11][8] = Square.TREE;
 		
+		level[6][7] = Square.BIGSHEEP;
+		level[7][7] = Square.BIGSHEEP;
+		level[6][8] = Square.BIGSHEEP;
+		
 		return level;
 	}
-	
-	
+
 }
 
 
