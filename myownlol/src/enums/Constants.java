@@ -53,6 +53,34 @@ public class Constants {
 		level[7][9] = Square.ROCK;
 		level[7][10] = Square.ROCK;
 		level[7][11] = Square.ROCK;
+		level[6][10] = Square.BABYSHEEP;
+		
+		return level;
+	}
+	
+	public static Square[][] levelTwo() {
+		level = new Square[BOARD_WIDTH][BOARD_HEIGHT];
+		for (int i = 0; i < BOARD_WIDTH; i++) {
+			for (int j = 0; j < BOARD_HEIGHT; j++) {
+				level[i][j] = Square.GRASS;
+			}
+		}
+		
+		level[0][1] = Square.HFENCE;
+		level[1][1] = Square.HFENCE;
+		level[3][1] = Square.VFENCE;
+		level[3][0] = Square.VFENCE;
+		
+		level[7][0] = Square.TREE;
+		level[8][0] = Square.TREE;
+		level[9][0] = Square.TREE;
+		level[0][10] = Square.TREE;
+		level[0][11] = Square.TREE;
+		level[1][11] = Square.TREE;
+		level[11][5] = Square.TREE;
+		level[11][6] = Square.TREE;
+		level[11][7] = Square.TREE;
+		level[11][8] = Square.TREE;
 		
 		return level;
 	}

@@ -12,17 +12,24 @@ import enums.Constants;
 
 public class Level {
 	private ArrayList<Sheep> sheepArray;
+	
 	private Square[][] level;
+	
 	private int sheepcount;
 	private int treeCount;
+	private int babySheepCount;
+	
 	private Point herderStart;
 	private Point wolfStart;
+	
 	private Stack<Point> wolfMoves;
+	private boolean hasWolf;
 
 	public Level(int levelNumber) {
 
 		this.sheepcount = 0;
 		this.treeCount = 0;
+
 
 		this.level = new Square[Constants.BOARD_WIDTH][Constants.BOARD_HEIGHT];
 
@@ -30,6 +37,7 @@ public class Level {
 		case 1:
 			
 			level = Constants.levelOne();
+			this.hasWolf = false;
 			
 			for (int i = 0; i < Constants.BOARD_HEIGHT; i++) {
 				for (int j = 0; j < Constants.BOARD_WIDTH; j++) {
@@ -38,65 +46,51 @@ public class Level {
 					}
 				}
 			}
-
-			Sheep sheep1 = new Sheep(new Point(6, 10), Condition.ALIVE);
 			
-			wolfStart = new Point(11,11);
-
-			wolfMoves = new Stack<Point>();
-			wolfMoves.push(new Point(6,10));
-			wolfMoves.push(new Point(5,10));
-			wolfMoves.push(new Point(4,10));
-			wolfMoves.push(new Point(4,9));
-			wolfMoves.push(new Point(4,8));
-			wolfMoves.push(new Point(4,7));
-			wolfMoves.push(new Point(4,6));
-			wolfMoves.push(new Point(4,5));
-			wolfMoves.push(new Point(4,4));
-			wolfMoves.push(new Point(5,4));
-			wolfMoves.push(new Point(6,4));
-			wolfMoves.push(new Point(7,4));
-			wolfMoves.push(new Point(8,4));
-			wolfMoves.push(new Point(9,4));
-			wolfMoves.push(new Point(10,4));
-			wolfMoves.push(new Point(11,4));
-			wolfMoves.push(new Point(11,5));
-			wolfMoves.push(new Point(11,6));
-			wolfMoves.push(new Point(11,7));
-			wolfMoves.push(new Point(11,8));
-			wolfMoves.push(new Point(11,9));
-			wolfMoves.push(new Point(11,10));
 
 			sheepArray = new ArrayList<Sheep>();
-			sheepArray.add(sheep1);
-
-			sheepcount = sheepArray.size();
+			this.sheepcount = sheepArray.size();
+			
+			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
+				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
+					if (level[i][j].equals(Square.BABYSHEEP)) {
+						this.babySheepCount++;
+					}
+				}
+			}
 
 			herderStart = new Point(0,0);
 			
 
 			break;
 		case 2:
+
+			this.level = Constants.levelTwo();
+			this.hasWolf = false;
+			
+			for (int i = 0; i < Constants.BOARD_HEIGHT; i++) {
+				for (int j = 0; j < Constants.BOARD_WIDTH; j++) {
+					if (level[i][j].equals(Square.TREE)) {
+						treeCount++;
+					}
+				}
+			}
+			
+			Sheep sheep = new Sheep(new Point(6,7), Condition.ALIVE);
+			sheepArray = new ArrayList<Sheep>();
+			sheepArray.add(sheep);
+
+			this.sheepcount = sheepArray.size();
+			
 			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
 				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
-					level[i][j] = Square.GRASS;
+					if (level[i][j].equals(Square.BABYSHEEP)) {
+						this.babySheepCount++;
+					}
 				}
 			}
 
-			Sheep sheep4 = new Sheep(new Point(0, 0), Condition.ALIVE);
-			Sheep sheep5 = new Sheep(new Point(11, 11), Condition.ALIVE);
-			Sheep sheep6 = new Sheep(new Point(11, 0), Condition.ALIVE);
-			Sheep sheep7 = new Sheep(new Point(0, 11), Condition.ALIVE);
-
-			sheepArray = new ArrayList<Sheep>();
-			sheepArray.add(sheep4);
-			sheepArray.add(sheep5);
-			sheepArray.add(sheep6);
-			sheepArray.add(sheep7);
-
-			sheepcount = sheepArray.size();
-
-			herderStart = new Point(5,5);
+			herderStart = new Point(2,3);
 
 			break;
 		case 3:
@@ -117,6 +111,10 @@ public class Level {
 
 	public int getSheepCount() {
 		return this.sheepcount;
+	}
+	
+	public int getBabySheepCount() {
+		return this.babySheepCount;
 	}
 	
 	public int getTreeCount() {
@@ -142,5 +140,16 @@ public class Level {
 	
 	public void setSquareAt(Point p, Square sq){
 		level[p.x][p.y] = sq;
+	}
+	
+	public boolean hasSheep() {
+		if (sheepArray.size() > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hasWolf() {
+		return this.hasWolf;
 	}
 }

@@ -41,7 +41,7 @@ public class StartDisplay {
 		startButton.setPrefHeight(50);
 		startButton.setPrefWidth(100);
 		startButton.setLayoutX(350);
-		startButton.setLayoutY(250);
+		startButton.setLayoutY(300);
 		startButton.setStyle("-fx-border: 12px solid;" + "-fx-border-color: black;" + "-fx-background-color: green;");
 		
 		levelButton = new Button("Levels");
@@ -49,25 +49,25 @@ public class StartDisplay {
 		levelButton.setPrefHeight(50);
 		levelButton.setPrefWidth(100);
 		levelButton.setLayoutX(350);
-		levelButton.setLayoutY(310);
+		levelButton.setLayoutY(350);
 		levelButton.setStyle("-fx-border: 12px solid;" + "-fx-border-color: black;" + "-fx-background-color: green;");
 		
 		
 		display.getChildren().add(startButton);
 		display.getChildren().add(levelButton);
-//		
-//		media = new Media(getClass().getResource("/media/intro.mp4").toString());
-//		
-//		player = new MediaPlayer(media);
-//		
-//		view = new MediaView(player);
-//		
-//		this.startdisplay.getChildren().add(view);
+		
+		media = new Media(getClass().getResource("/media/intro.mp4").toString());
+		
+		player = new MediaPlayer(media);
+		
+		view = new MediaView(player);
+		
+		this.startdisplay.getChildren().add(view);
 		this.startdisplay.getChildren().add(display);
 		
-//		player.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
-//		
-//		player.play();
+		player.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
+		
+		player.play();
 	}
 
 	public Button getStartButton() {

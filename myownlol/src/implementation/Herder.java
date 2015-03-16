@@ -1,6 +1,7 @@
 package implementation;
 
 import java.awt.Point;
+
 import java.util.ArrayList;
 
 import Sounds.GameSounds;
@@ -102,14 +103,12 @@ public class Herder {
 
 		if (isLocationOutOfBounds(newPoint)) {
 			takeDamage();
-		}
-		else if (level.getSquareAt(newPoint).equals(Square.HOLE)) {
+		} else if (level.getSquareAt(newPoint).equals(Square.HOLE)) {
 			this.location = newPoint;
 			currentBoard.animateMovement(this.location);
 			takeDamage();
-		}
-		else if (level.getSquareAt(newPoint).equals(Square.ROCK)) {
-			
+		} else if (level.getSquareAt(newPoint).equals(Square.ROCK)) {
+
 		}
 
 		else if (level.getSquareAt(newPoint).equals(Square.TREE)) {
@@ -141,8 +140,7 @@ public class Herder {
 			currentBoard.updateSquareAt(location, Square.GRASS);
 			move(this.location, dir);
 
-		}
-		else if (level.getSquareAt(newPoint).equals(Square.BREAKABLE_ROCK)) {
+		} else if (level.getSquareAt(newPoint).equals(Square.BREAKABLE_ROCK)) {
 
 			if (itemEquipped.equals("PICKAXE")) {
 				currentBoard.pickRockAnimation();
@@ -150,12 +148,23 @@ public class Herder {
 				currentBoard.animateMovement(this.location);
 				level.setSquareAt(location, Square.GRASS);
 				currentBoard.updateSquareAt(this.location, Square.GRASS);
-			}
-			else {
+			} else {
 				// DO NOTHING
 			}
+		}
 
-		} 
+		else if (level.getSquareAt(newPoint).equals(Square.BABYSHEEP)) {
+			currentBoard.chatDisplay("Press \"D\" to pick up the sheep.");
+		}
+		
+		else if (level.getSquareAt(newPoint).equals(Square.VFENCE)) {
+			// DO NOTHING
+		}
+		
+		else if (level.getSquareAt(newPoint).equals(Square.HFENCE)) {
+			// DO NOTHING
+		}
+
 		else {
 			this.location = newPoint;
 			currentBoard.animateMovement(this.location);
@@ -201,6 +210,60 @@ public class Herder {
 	public void unEquip() {
 		itemEquipped = "";
 		currentBoard.changeHerderImage(Square.HERDER.getImage());
+	}
+
+	public boolean isStandingNextToSheep(Point p) {
+
+		if (!isLocationOutOfBounds(new Point(p.x + 1, p.y))) {
+
+			if (level.getSquareAt(new Point(p.x + 1, p.y)).equals(
+					Square.BABYSHEEP)) {
+				this.location = new Point(p.x + 1, p.y);
+				currentBoard.animateMovement(location);
+				return true;
+			}
+
+		}
+		if (!isLocationOutOfBounds(new Point(p.x - 1, p.y))) {
+
+			if (level.getSquareAt(new Point(p.x - 1, p.y)).equals(
+					Square.BABYSHEEP)) {
+				this.location = new Point(p.x - 1, p.y);
+				currentBoard.animateMovement(location);
+				return true;
+			}
+
+		}
+		if (!isLocationOutOfBounds(new Point(p.x, p.y + 1))) {
+
+			if (level.getSquareAt(new Point(p.x, p.y + 1)).equals(
+					Square.BABYSHEEP)) {
+				this.location = new Point(p.x, p.y + 1);
+				currentBoard.animateMovement(location);
+				return true;
+			}
+
+		}
+		if (!isLocationOutOfBounds(new Point(p.x, p.y - 1))) {
+
+			if (level.getSquareAt(new Point(p.x, p.y - 1)).equals(
+					Square.BABYSHEEP)) {
+				this.location = new Point(p.x, p.y - 1);
+				currentBoard.animateMovement(location);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public void pickUpSheep() {
+		if (level.getSquareAt(location).equals(Square.BABYSHEEP)) {
+			GameSounds.playBaa();
+			level.setSquareAt(location, Square.GRASS);
+			currentBoard.updateSquareAt(location, Square.GRASS);
+			playerstats.sheepCaught();
+		}
 	}
 
 }

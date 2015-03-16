@@ -1,59 +1,84 @@
 package graphics;
 
-import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.TilePane;
 import enums.Square;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.input.MouseEvent;
 
-public class LoserDisplay {
-	
-	Group loserdisplay;
+public class LoserDisplay extends Pane {
 
-	Button loserButton;
+	private Button loserButton;
 
-	TilePane tilePane;
+	private Media media;
 
-	ImageView loserImage;
+	private MediaPlayer player;
+
+	private MediaView view;
+
+	private Image retryButtonImage;
+
+	private ImageView pikkHomoNeger;
+
+	private DropShadow shadow;
 
 	public LoserDisplay() {
 
-		this.loserdisplay = new Group();
+		this.loserButton = new Button();
 
-		this.loserButton = new Button("RETRY?");
+		this.retryButtonImage = Square.RETRY.getImage();
 
-		this.tilePane = new TilePane();
+		this.pikkHomoNeger = new ImageView(retryButtonImage);
+		
+		Color red = Color.rgb(255,0,0);
+		double dobbelPenetration = 200;
+		
+		DropShadow shadow = new DropShadow ();
+		InnerShadow shadowB = new InnerShadow (dobbelPenetration,red);
+		
+		pikkHomoNeger.setEffect(shadow);
+		
 
-		this.tilePane = new TilePane();
-		this.tilePane.setHgap(0);
-		this.tilePane.setPrefColumns(1);
+		loserButton.setLayoutX(300);
+		loserButton.setLayoutY(300);
+		loserButton.setStyle("-fx-background-color: transparent;");
 
-		this.loserImage = new ImageView();
-		this.loserImage.setImage(Square.LOSER_DISPLAY.getImage());
-		this.loserImage.setFitHeight(600);
-		this.loserImage.setFitWidth(600);
+	
+		
+		loserButton.setGraphic(pikkHomoNeger);
+		pikkHomoNeger.setOnMouseDragOver(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) {
+				pikkHomoNeger.setEffect(shadow);
+			}
+		});
 
-		this.tilePane.getChildren().add(loserImage);
+		media = new Media(getClass().getResource("/media/death.mp4").toString());
 
-		this.loserdisplay.getChildren().add(tilePane);
-		this.loserdisplay.getChildren().add(loserButton);
+		player = new MediaPlayer(media);
 
-	}
+		view = new MediaView(player);
 
-	public TilePane getTilePane() {
-		return this.tilePane;
+		player.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
+
+		this.getChildren().add(view);
+		this.getChildren().add(loserButton);
+
+		player.play();
+
 	}
 
 	public Button getLoserButton() {
+
 		return this.loserButton;
-	}
-
-	public ImageView getLoserImage() {
-		return this.loserImage;
-	}
-
-	public Group getLoserGroup() {
-		return this.loserdisplay;
 	}
 
 }

@@ -18,13 +18,19 @@ import javafx.animation.TimelineBuilder;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 public class BoardDisplay {
@@ -48,6 +54,8 @@ public class BoardDisplay {
 	private Image herderPickingRock;
 	private Image herderPickAxe;
 	private Image herderSmack;
+	private Image vfence;
+	private Image hfence;
 
 	private Level level;
 
@@ -66,12 +74,14 @@ public class BoardDisplay {
 		this.group = new Group();
 
 		this.herderImage = Square.HERDER.getImage();
-		this.sheepImage = Square.SHEEP.getImage();
+		this.sheepImage = Square.BIGSHEEP.getImage();
 		this.wolfImage = Square.WOLF.getImage();
 		this.treeImage = Square.TREE_IMAGE.getImage();
 		this.herderPickingRock = Square.HERDER_PICKAXE.getImage();
 		this.herderPickAxe = Square.PICKAXE.getImage();
 		this.herderSmack = Square.HERDER_SMACK.getImage();
+		this.hfence = Square.HFENCE.getImage();
+		this.vfence = Square.VFENCE.getImage();
 
 		sheepArray = new ImageView[level.getSheepCount()];
 		trees = new ImageView[level.getTreeCount()];
@@ -131,7 +141,10 @@ public class BoardDisplay {
 			group.getChildren().add(iv);
 		}
 		group.getChildren().add(herder);
-		group.getChildren().add(wolf);
+
+		if (level.hasWolf()) {
+			group.getChildren().add(wolf);
+		}
 	}
 
 	public void drawHerder(Point p) {
@@ -254,7 +267,6 @@ public class BoardDisplay {
 	public void animateToStart(Point p) {
 
 		if (herder.getX() == 0 && herder.getY() == 0) {
-			System.out.println("STARTAREA");
 
 			Path path = new Path();
 			path.getElements().add(new MoveTo(0, 0));
@@ -352,7 +364,7 @@ public class BoardDisplay {
 					}
 
 				});
-		
+
 		KeyFrame reset = new KeyFrame(Duration.millis(100),
 				new EventHandler<ActionEvent>() {
 
@@ -395,6 +407,67 @@ public class BoardDisplay {
 
 	public void changeHerderImage(Image img) {
 		herder.setImage(img);
+	}
+
+	public void chatDisplay(String stringtext) {
+
+		Text text = new Text();
+		text.setText(stringtext);
+		text.setFont(new Font(15));
+		text.setTextAlignment(TextAlignment.CENTER);
+
+		text.setWrappingWidth(100);
+
+		if (herder.getX() >= 500) {
+
+			text.setLayoutX(herder.getX() - 100);
+			text.setLayoutY(herder.getY());
+
+		}
+
+		else if (herder.getX() <= 100) {
+			text.setLayoutX(herder.getX() + 100);
+			text.setLayoutY(herder.getY());
+		}
+
+		else if (herder.getY() >= 500) {
+			text.setLayoutX(herder.getX());
+			text.setLayoutY(herder.getY() - 100);
+
+		}
+
+		else if (herder.getY() <= 100) {
+			text.setLayoutX(herder.getX());
+			text.setLayoutY(herder.getY() + 100);
+
+		}
+
+		else {
+			text.setLayoutX(herder.getX());
+			text.setLayoutY(herder.getY());
+
+		}
+
+		this.group.getChildren().add(text);
+
+		FadeTransition ft = new FadeTransition(Duration.millis(1500), text);
+		ft.setAutoReverse(false);
+		ft.setCycleCount(1);
+		ft.setFromValue(1);
+		ft.setToValue(1);
+		ft.play();
+
+		ft.setOnFinished(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				text.setVisible(false);
+				text.setDisable(true);
+
+			}
+
+		});
+
 	}
 
 }

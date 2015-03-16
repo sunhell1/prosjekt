@@ -2,10 +2,8 @@ package graphics;
 
 import implementation.Herder;
 
+
 import implementation.Item;
-import javafx.animation.FadeTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -17,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 
 public class ConsoleDisplay extends Pane {
 
@@ -25,7 +22,6 @@ public class ConsoleDisplay extends Pane {
 	private final int width = 200;
 	private int layY;
 	
-	private Text text;
 	private Herder herder;
 
 	public ConsoleDisplay(Herder herder) {
