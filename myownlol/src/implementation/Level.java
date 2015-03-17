@@ -117,6 +117,8 @@ public class Level {
 			
 			level[9][9] = Square.BIGSHEEP;
 			
+
+			
 			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
 				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
 					if (level[i][j].equals(Square.BABYSHEEP)) {
