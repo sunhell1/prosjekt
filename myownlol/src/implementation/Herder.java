@@ -287,7 +287,7 @@ public class Herder {
 	}
 
 	public void smackSheep(Point p) {
-
+		
 		if (!level.isLocationOutOfBounds(new Point(p.x + 1, p.y)) && level.isSquareValid(new Point(p.x + 2, p.y))) {
 			if (level.getSquareAt(new Point(p.x + 1, p.y)).equals(
 					Square.BIGSHEEP)) {

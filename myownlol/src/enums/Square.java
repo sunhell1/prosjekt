@@ -21,7 +21,8 @@ public enum Square {
 			"images/wolf-tile.png")), BREAKABLE_ROCK(new Image(
 			"images/pickablerock.png")), RETRY(new Image("images/retry.png")), PICKAXE_ITEM(
 			new Image("images/pickaxeitem.png")), HFENCE(new Image(
-			"images/Hfence.png")), VFENCE(new Image("images/Vfence.png"));
+			"images/Hfence.png")), VFENCE(new Image("images/Vfence.png")), SNOWSQUARE(new Image("images/snow-tile.png")),
+			ICESQUARE(new Image("images/ice-tile.png"));
 
 	private Image img;
 

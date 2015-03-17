@@ -347,29 +347,12 @@ public class BoardDisplay {
 		smackLine.setCycleCount(1);
 		smackLine.setAutoReverse(true);
 
-		KeyFrame smack = new KeyFrame(Duration.millis(0),
-				new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent event) {
-						changeHerderImage(herderSmack);
-					}
-
-				});
-
-		KeyFrame reset = new KeyFrame(Duration.millis(100),
-				new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent event) {
-						changeHerderImage(herderImage);
-					}
-
-				});
+		KeyFrame smack = new KeyFrame(Duration.millis(0), event -> changeHerderImage(herderSmack));
+		KeyFrame reset = new KeyFrame(Duration.millis(100), event -> changeHerderImage(herderImage));
+		
 		smackLine.getKeyFrames().add(smack);
 		smackLine.getKeyFrames().add(reset);
 		smackLine.play();
-
 	}
 
 	public void updateSquareAt(Point p, Square sq) {

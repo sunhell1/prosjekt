@@ -1,6 +1,7 @@
 package implementation;
 
 import java.awt.Point;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -105,6 +106,40 @@ public class Level {
 
 			break;
 		case 3:
+			
+			for (int i = 0; i < Constants.BOARD_HEIGHT; i++){
+				for (int j = 0; j < Constants.BOARD_WIDTH; j++){
+					level[i][j] = Square.SNOWSQUARE;	
+				}
+			}
+			
+			level[5][5] = Square.ICESQUARE;
+			
+			level[9][9] = Square.BIGSHEEP;
+			
+			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
+				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
+					if (level[i][j].equals(Square.BABYSHEEP)) {
+						this.babySheepCount++;
+					}
+				}
+			}
+			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
+				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
+					if (level[i][j].equals(Square.BIGSHEEP)) {
+						this.bigSheepCount++;
+					}
+				}
+			}
+				
+
+			
+			this.hasWolf = false;
+			this.fence = false;
+			
+			this.herderStart = new Point(1,1);
+			
+			
 			break;
 		default:
 			System.out.println("LOL");
