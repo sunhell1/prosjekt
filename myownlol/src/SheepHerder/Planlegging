@@ -1,17 +1,55 @@
 Plan - Prioritylist
    
-1. Implement remaining intended features of the game:
-   - Retry function to function properly. Edit mouseClicked() method. 
-   - Banana and beerbottle should consume on use. 
-   - Bigger GridPane (Levels) (see if we can have a dynamic size)
-   
-2. Implementation after cleanup and fixes (Should be a functioning version)
-   - Wolf with an array of moves for each level heading for sheeps. (can wait) 
-   - Player Stats. life should be displayed aswell as an inventory. Sheepcounter increment.
-   - Beer Animation for drinking a beer.
-   - Tree animation
-   - 
-   - 
-   - 
-   - Whatever +++
-   
+ASAP:
+
+- Fix so the herder imageview gets put back to starting position after sliding out of bounds.
+- Fix sliding on ice for Big sheep
+- Fix collision on endsquare for sliding squares
+- Fix babysheep to make herder equip (Carry) babysheep. Add it to inventory(?)
+- When dropping babysheep, search surrounding squares if they are valid. If not, make babysheep not droppable.
+- Fix Seasons (ENUM, SQUARES)
+- Fix board update relative to Season.
+
+NEAR FUTURE:
+
+-Dynamic levelsize
+-Caves, darkness needing equiped Torch to add light to surrounding squares.
+-Critters (MOBS)
+	- Add projectiles.
+	- Snakes
+	- Giant spiders
+	- Dragons (ofcourse)
+	- ROGUE THIEVES! (Steal babysheeps, carrots and can rob your inventory)
+	
+-Add function to level button on startup
+-Storyline as Timeline relative to level/season. Voice/text (both)?
+-See how tree animations turns out. Dancing trees?
+-Introduce more Items to the game. Make them have a function. Inventory reset for each level? 
+    -Sword
+    -Torch
+    -Ice Pick
+    -Shield (for fighting dragons ofcourse)
+    -Armor (add lives/durability) armor rolls?
+    -Carrot
+    
+-Add ways to increase your lifepoints.
+-Maintain lifepoints througout game.
+
+AUTUMN:
+-Wind pushing you in wind direction
+-Sluggish movement through leaves
+
+WINTER:
+-Ice to function properly
+-Bear?
+
+SUMMER:
+-"Normal" levels, introducing the basic functions of the game.
+
+SPRING:
+-Pollen?
+
+WISHLIST:
+- Bossfight(?) for season end/switch
+- Add fucking epic music to bossfights.
+- Add lighting and effects for each season (sun for summer, rain for autumn, snow for winter, flowers for spring).
