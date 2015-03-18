@@ -20,11 +20,11 @@ public class StartDisplay {
 	Button startButton;
 	Button levelButton;
 	
-	private Media media;
-	
-	private MediaPlayer player;
-	
-	private MediaView view;
+//	private Media media;
+//	
+//	private MediaPlayer player;
+//	
+//	private MediaView view;
 	
 	private Pane display;
 
@@ -56,18 +56,18 @@ public class StartDisplay {
 		display.getChildren().add(startButton);
 		display.getChildren().add(levelButton);
 		
-		media = new Media(getClass().getResource("/media/intro.mp4").toString());
-		
-		player = new MediaPlayer(media);
-		
-		view = new MediaView(player);
-		
-		this.startdisplay.getChildren().add(view);
+//		media = new Media(getClass().getResource("/media/intro.mp4").toString());
+//		
+//		player = new MediaPlayer(media);
+//		
+//		view = new MediaView(player);
+//		
+//		this.startdisplay.getChildren().add(view);
 		this.startdisplay.getChildren().add(display);
-		
-		player.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
-		
-		player.play();
+//		
+//		player.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
+//		
+//		player.play();
 	}
 
 	public Button getStartButton() {

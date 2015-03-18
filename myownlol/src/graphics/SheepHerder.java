@@ -82,22 +82,24 @@ public class SheepHerder extends Scene {
 		this.group.getChildren().add(sd.getStartGroup());
 		sd.getStartButton().setOnMouseClicked(
 				event -> mouseClicked(event, "NEW"));
-		GameSounds.playTheme();
+		// GameSounds.playTheme();
 	}
 
 	private void winningScene() {
 		this.group.getChildren().add(wd.getWinningGroup());
 		wd.getWinningButton().setOnMouseClicked(
 				event -> mouseClicked(event, "NEW"));
-		GameSounds.playTheme();
+		// GameSounds.playTheme();
 	}
 
 	private void loserScene() {
+		this.group.getChildren().removeAll(bd.getGroup());
+		this.group.getChildren().remove(statsDisplay);
 		this.group.getChildren().remove(ld);
 		this.group.getChildren().add(ld);
 		ld.getLoserButton().setOnMouseClicked(
 				event -> mouseClicked(event, "RETRY"));
-		GameSounds.playTheme();
+		// GameSounds.playTheme();
 	}
 
 	public void initateGame(int levelNumber) {
@@ -127,10 +129,10 @@ public class SheepHerder extends Scene {
 		placePlayer();
 		placeTrees();
 
-		this.setOnKeyPressed(event -> keyPressed(event));
+		this.setOnKeyReleased(event -> keyReleased(event));
 	}
 
-	public void keyPressed(KeyEvent e) {
+	public void keyReleased(KeyEvent e) {
 		if (e.getCode() == KeyCode.ESCAPE) {
 			gui.closePrimary();
 		} else if (e.getCode() == KeyCode.UP) {
@@ -161,8 +163,12 @@ public class SheepHerder extends Scene {
 			if (herder.getItemEquipped().equals("")) {
 				herder.smackSheep(herder.getLocation());
 				bd.smackAnimation();
-				if (sheepFenced()){
+				if (sheepFenced()) {
 					gameFlow();
+				}
+				herder.setSmacked(true);
+				if (herder.killedSheep()) {
+					loserScene();
 				}
 			}
 		} else if (e.getCode() == KeyCode.D) {
@@ -180,7 +186,7 @@ public class SheepHerder extends Scene {
 		this.group.getChildren().removeAll(sd.getStartGroup());
 		this.group.getChildren().removeAll(wd.getWinningGroup());
 		this.group.getChildren().removeAll(ld);
-		GameSounds.stopTheme();
+		// GameSounds.stopTheme();
 
 		this.state = state;
 
@@ -230,6 +236,10 @@ public class SheepHerder extends Scene {
 	}
 
 	public int gameOver() {
+
+		if (herder.getLives() <= 0) {
+			return 2;
+		}
 		if (sheepCount == 0) {
 			return 1;
 		}
@@ -249,13 +259,9 @@ public class SheepHerder extends Scene {
 			}
 		}
 
-
-		if (herder.getLives() <= 0) {
-			return 2;
-		} else
-			return 0;
+		return 0;
 	}
-	
+
 	private boolean sheepFenced() {
 		if (level.hasFencePoint()) {
 			if (level.getSquareAt(level.getFencePoint())

@@ -91,12 +91,12 @@ public class BoardDisplay {
 			trees[i].setImage(treeImage);
 		}
 
-//		for (int i = 0; i < sheepArray.length; i++) {
-//			sheepArray[i] = new ImageView();
-//			sheepArray[i].setFitHeight(PREFERRED_DIM);
-//			sheepArray[i].setFitWidth(PREFERRED_DIM);
-//			sheepArray[i].setImage(sheepImage);
-//		}
+		// for (int i = 0; i < sheepArray.length; i++) {
+		// sheepArray[i] = new ImageView();
+		// sheepArray[i].setFitHeight(PREFERRED_DIM);
+		// sheepArray[i].setFitWidth(PREFERRED_DIM);
+		// sheepArray[i].setImage(sheepImage);
+		// }
 
 		herder = new ImageView();
 		herder.setFitHeight(PREFERRED_DIM);
@@ -157,61 +157,107 @@ public class BoardDisplay {
 		trees[treeCounter++].setY(p.y * PREFERRED_DIM);
 	}
 
-//	public void removeSheep(Point p) {
-//		for (ImageView img : sheepArray) {
-//
-//			if (img.getX() == p.getX() * PREFERRED_DIM
-//					&& img.getY() == p.getY() * PREFERRED_DIM) {
-//
-//				group.getChildren().remove(img);
-//
-//			}
-//		}
-//	}
+	// public void removeSheep(Point p) {
+	// for (ImageView img : sheepArray) {
+	//
+	// if (img.getX() == p.getX() * PREFERRED_DIM
+	// && img.getY() == p.getY() * PREFERRED_DIM) {
+	//
+	// group.getChildren().remove(img);
+	//
+	// }
+	// }
+	// }
+
+	// public void beerAnimation() {
+	// RotateTransition rotateTransition = new RotateTransition(
+	// Duration.millis(1000), group);
+	// rotateTransition.setByAngle(180);
+	// rotateTransition.setCycleCount(1);
+	// rotateTransition.setAutoReverse(false);
+	// rotateTransition.play();
+	//
+	// rotateTransition = new RotateTransition(Duration.millis(1000), herder);
+	// rotateTransition.setByAngle(180);
+	// rotateTransition.setCycleCount(1);
+	// rotateTransition.setAutoReverse(false);
+	// rotateTransition.play();
+	//
+	// for (int i = 0; i < sheepArray.length; i++) {
+	// rotateTransition = new RotateTransition(Duration.millis(1000),
+	// sheepArray[i]);
+	// rotateTransition.setByAngle(180);
+	// rotateTransition.setCycleCount(1);
+	// rotateTransition.setAutoReverse(false);
+	// rotateTransition.play();
+	// }
+	//
+	// for (int i = 0; i < treeCounter; i++) {
+	// rotateTransition = new RotateTransition(Duration.millis(1000),
+	// trees[i]);
+	// rotateTransition.setByAngle(180);
+	// rotateTransition.setCycleCount(1);
+	// rotateTransition.setAutoReverse(false);
+	// rotateTransition.play();
+	// }
+	// }
+
+	public void iceSquareAnimation(Point startPoint, Point endPoint,
+			boolean animateToStart) {
+
+		boolean aniToStart = animateToStart;
+
+		Path path = new Path();
+		path.getElements().add(
+				new MoveTo(startPoint.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						startPoint.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new LineTo(endPoint.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						endPoint.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new MoveTo(endPoint.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						endPoint.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+
+		PathTransition pt = new PathTransition(Duration.millis(1500), path,
+				herder);
+		pt.play();
+
+		RotateTransition rotateTransition = new RotateTransition(
+				Duration.millis(1500), herder);
+		rotateTransition.setByAngle(360);
+		rotateTransition.setCycleCount(1);
+		rotateTransition.setAutoReverse(true);
+		rotateTransition.play();
+	
+		
+		herder.setX(endPoint.x * PREFERRED_DIM);
+		herder.setY(endPoint.y * PREFERRED_DIM);
 
 
 
-//	public void beerAnimation() {
-//		RotateTransition rotateTransition = new RotateTransition(
-//				Duration.millis(1000), group);
-//		rotateTransition.setByAngle(180);
-//		rotateTransition.setCycleCount(1);
-//		rotateTransition.setAutoReverse(false);
-//		rotateTransition.play();
-//
-//		rotateTransition = new RotateTransition(Duration.millis(1000), herder);
-//		rotateTransition.setByAngle(180);
-//		rotateTransition.setCycleCount(1);
-//		rotateTransition.setAutoReverse(false);
-//		rotateTransition.play();
-//
-//		for (int i = 0; i < sheepArray.length; i++) {
-//			rotateTransition = new RotateTransition(Duration.millis(1000),
-//					sheepArray[i]);
-//			rotateTransition.setByAngle(180);
-//			rotateTransition.setCycleCount(1);
-//			rotateTransition.setAutoReverse(false);
-//			rotateTransition.play();
-//		}
-//
-//		for (int i = 0; i < treeCounter; i++) {
-//			rotateTransition = new RotateTransition(Duration.millis(1000),
-//					trees[i]);
-//			rotateTransition.setByAngle(180);
-//			rotateTransition.setCycleCount(1);
-//			rotateTransition.setAutoReverse(false);
-//			rotateTransition.play();
-//		}
-//	}
+		if (aniToStart == true) {
+			pt.setOnFinished(event -> slideOutOfMap());
 
-//	public void bananaAnimation() {
-//		RotateTransition rotateTransition = new RotateTransition(
-//				Duration.millis(1000), herder);
-//		rotateTransition.setByAngle(360);
-//		rotateTransition.setCycleCount(1);
-//		rotateTransition.setAutoReverse(true);
-//		rotateTransition.play();
-//	}
+		}
+
+	}
+
+	private void slideOutOfMap() {
+		
+		Timeline slideLine = new Timeline();
+		
+		slideLine.setCycleCount(1);
+		slideLine.setAutoReverse(false);
+		
+		KeyFrame ani1 = new KeyFrame(Duration.millis(0), event -> damageAnimation());
+		KeyFrame ani2 = new KeyFrame(Duration.millis(500), event -> animateToStart(level.getHerderStart()));
+		
+		slideLine.getKeyFrames().add(ani1);
+		slideLine.getKeyFrames().add(ani2);
+		
+		slideLine.play();
+		
+	}
 
 	public void animateMovement(Point p) {
 		Path path = new Path();
@@ -228,7 +274,7 @@ public class BoardDisplay {
 				new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
 
 		PathTransition pathTransition = new PathTransition(
-				Duration.millis(250), path, herder);
+				Duration.millis(150), path, herder);
 
 		pathTransition.play();
 
@@ -289,9 +335,10 @@ public class BoardDisplay {
 			PathTransition pt = new PathTransition(Duration.millis(1000), path,
 					herder);
 			pt.play();
-
+			
 			herder.setX(px);
 			herder.setY(py);
+
 		}
 	}
 
@@ -347,9 +394,11 @@ public class BoardDisplay {
 		smackLine.setCycleCount(1);
 		smackLine.setAutoReverse(true);
 
-		KeyFrame smack = new KeyFrame(Duration.millis(0), event -> changeHerderImage(herderSmack));
-		KeyFrame reset = new KeyFrame(Duration.millis(100), event -> changeHerderImage(herderImage));
-		
+		KeyFrame smack = new KeyFrame(Duration.millis(0),
+				event -> changeHerderImage(herderSmack));
+		KeyFrame reset = new KeyFrame(Duration.millis(100),
+				event -> changeHerderImage(herderImage));
+
 		smackLine.getKeyFrames().add(smack);
 		smackLine.getKeyFrames().add(reset);
 		smackLine.play();
@@ -386,9 +435,13 @@ public class BoardDisplay {
 
 	public void animateSheepMovement(Point location, Point destination) {
 
-		this.level.setSquareAt(location, Square.GRASS);
-		this.level.setSquareAt(destination, Square.BIGSHEEP);
-		
+		this.level.setSquareAt(location, level.getBackupSquare());
+
+		if (this.level.getSquareAt(destination).equals(Square.GRASS)) {
+			this.level.setSquareAt(destination, Square.BIGSHEEP);
+		} else
+			this.level.setSquareAt(destination, Square.SNOWBIGSHEEP);
+
 		ImageView iv = new ImageView();
 		iv.setFitWidth(PREFERRED_DIM);
 		iv.setFitHeight(PREFERRED_DIM);
@@ -404,24 +457,26 @@ public class BoardDisplay {
 		path.getElements().add(
 				new MoveTo(destination.x * PREFERRED_DIM + PREFERRED_DIM / 2,
 						destination.y * PREFERRED_DIM + PREFERRED_DIM / 2));
-		
+
 		PathTransition pt = new PathTransition(Duration.millis(100), path, iv);
-		
+
 		pt.play();
-		
-		pt.setOnFinished(new EventHandler<ActionEvent>(){
+
+		pt.setOnFinished(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
 				iv.setDisable(true);
-				iv.setVisible(false);	
-				updateSquareAt(location, Square.GRASS);
-				updateSquareAt(destination, Square.BIGSHEEP);
-				
+				iv.setVisible(false);
+				updateSquareAt(location, level.getBackupSquare());
+				if (level.getSquareAt(destination).equals(Square.GRASS)) {
+					updateSquareAt(destination, Square.BIGSHEEP);
+				} else
+					updateSquareAt(destination, Square.SNOWBIGSHEEP);
+
 			}
 		});
 	}
-	
 
 	public void chatDisplay(String stringtext) {
 

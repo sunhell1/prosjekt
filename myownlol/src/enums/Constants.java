@@ -46,12 +46,12 @@ public class Constants {
 		level[1][8] = Square.TREE;
 		level[1][9] = Square.TREE;
 		level[2][8] = Square.TREE;
-		level[3][8] = Square.HOLE;
+		level[3][8] = Square.PICKAXESQUARE;
 		level[5][9] = Square.ROCK;
 		level[6][9] = Square.ROCK;
 		level[7][9] = Square.ROCK;
-		level[7][10] = Square.ROCK;
-		level[7][11] = Square.ROCK;
+		level[7][10] = Square.BREAKABLE_ROCK;
+		level[7][11] = Square.BREAKABLE_ROCK;
 		level[6][10] = Square.BABYSHEEP;
 		
 		return level;

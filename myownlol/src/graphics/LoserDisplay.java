@@ -19,11 +19,11 @@ public class LoserDisplay extends Pane {
 
 	private Button loserButton;
 
-	private Media media;
-
-	private MediaPlayer player;
-
-	private MediaView view;
+//	private Media media;
+//
+//	private MediaPlayer player;
+//
+//	private MediaView view;
 
 	private Image retryButtonImage;
 
@@ -61,18 +61,18 @@ public class LoserDisplay extends Pane {
 			}
 		});
 
-		media = new Media(getClass().getResource("/media/death.mp4").toString());
-
-		player = new MediaPlayer(media);
-
-		view = new MediaView(player);
-
-		player.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
-
-		this.getChildren().add(view);
+//		media = new Media(getClass().getResource("/media/death.mp4").toString());
+//
+//		player = new MediaPlayer(media);
+//
+//		view = new MediaView(player);
+//
+//		player.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
+//
+//		this.getChildren().add(view);
 		this.getChildren().add(loserButton);
-
-		player.play();
+//
+//		player.play();
 
 	}
 

@@ -1,7 +1,6 @@
 package implementation;
 
 import java.awt.Point;
-
 import java.util.ArrayList;
 
 import Sounds.GameSounds;
@@ -46,6 +45,9 @@ public class Herder {
 
 	private String itemEquipped;
 
+	private boolean killedSheep;
+	private boolean smackedSheep;
+
 	public Herder(Point startLocation, Condition con, Level currentLevel,
 			BoardDisplay currentBoard, PlayerStats playerStats) {
 
@@ -59,15 +61,18 @@ public class Herder {
 		this.currentBoard = currentBoard;
 		this.playerstats = playerStats;
 		this.sheepCaught = 0;
-		inventorylist = new ArrayList<Item>();
+		this.inventorylist = new ArrayList<Item>();
 		this.cd = new ConsoleDisplay(this);
-		cd.relocate(600, 0);
+		this.cd.relocate(600, 0);
 
 		this.group.getChildren().add(cd);
 
 		this.item = new Item("PICKAXE", Square.GRASS.getImage());
 
 		this.itemEquipped = "";
+
+		this.killedSheep = false;
+		this.smackedSheep = false;
 
 	}
 
@@ -109,20 +114,20 @@ public class Herder {
 			this.location = newPoint;
 			currentBoard.animateMovement(this.location);
 			takeDamage();
-		} else if (level.getSquareAt(newPoint).equals(Square.ROCK)) {
-			counter ++;
+		} else if (level.getSquareAt(newPoint).equals(Square.ROCK)
+				|| level.getSquareAt(newPoint).equals(Square.SNOWROCK)) {
+			counter++;
 			if (counter == 5) {
-				currentBoard
-				.chatDisplay("I think its a rock");
+				currentBoard.chatDisplay("I think its a rock");
 				counter = 0;
 			}
 		}
 
-		else if (level.getSquareAt(newPoint).equals(Square.TREE)) {
-			counter ++;
+		else if (level.getSquareAt(newPoint).equals(Square.TREE)
+				|| level.getSquareAt(newPoint).equals(Square.SNOWTREE)) {
+			counter++;
 			if (counter == 5) {
-				currentBoard
-				.chatDisplay("I think its a tree.");
+				currentBoard.chatDisplay("I think its a tree.");
 				counter = 0;
 			}
 		}
@@ -132,8 +137,8 @@ public class Herder {
 			cd.addItemToInvetoryList(item);
 			this.location = newPoint;
 			currentBoard.animateMovement(this.location);
-			level.setSquareAt(newPoint, Square.GRASS);
-			currentBoard.updateSquareAt(this.location, Square.GRASS);
+			level.setSquareAt(newPoint, level.getBackupSquare());
+			currentBoard.updateSquareAt(this.location, level.getBackupSquare());
 		}
 
 		// else if (level.getSquareAt(newPoint).equals(Square.BEER)) {
@@ -144,35 +149,106 @@ public class Herder {
 		// currentBoard.updateSquareAt(location, Square.GRASS);
 		// }
 
-		// else if (level.getSquareAt(newPoint).equals(Square.BANANA)) {
-		// currentBoard.bananaAnimation();
-		// this.location = newPoint;
-		// currentBoard.animateMovement(this.location);
-		// level.setSquareAt(location, Square.GRASS);
-		// currentBoard.updateSquareAt(location, Square.GRASS);
-		// move(this.location, dir);
+		else if (level.getSquareAt(newPoint).equals(Square.ICESQUARE)) {
+			this.location = newPoint;
+			Point destinationPoint = new Point();
+			boolean slidOutOfBounds = false;
 
-		// }
+			if (dir.equals(Direction.NORTH)) {
+				for (int y = location.y; y >= 0; y--) {
+					destinationPoint.setLocation(location.x, y - 1);
+					 if (level.isLocationOutOfBounds(destinationPoint)){
+					 slidOutOfBounds = true;
+					 break;
+					 }
+
+					if (level.getSquareAt(destinationPoint).equals(
+							Square.ICESQUARE)) {
+						continue;
+					} else
+						break;
+				}
+			}
+
+			else if (dir.equals(Direction.WEST)) {
+				for (int x = location.x; x >= 0; x--) {
+					destinationPoint.setLocation(x - 1, location.y);
+					 if (level.isLocationOutOfBounds(destinationPoint)){
+					 slidOutOfBounds = true;
+					 break;
+					 }
+
+					if (level.getSquareAt(destinationPoint).equals(
+							Square.ICESQUARE)) {
+						continue;
+					} else
+						break;
+				}
+			}
+
+			else if (dir.equals(Direction.SOUTH)) {
+				for (int y = location.y; y < 12; y++) {
+					destinationPoint.setLocation(location.x, y + 1);
+					 if (level.isLocationOutOfBounds(destinationPoint)){
+					 slidOutOfBounds = true;
+					 break;
+					 }
+
+					if (level.getSquareAt(destinationPoint).equals(
+							Square.ICESQUARE)) {
+						continue;
+					} else
+						break;
+				}
+			}
+
+			else if (dir.equals(Direction.EAST)) {
+				for (int x = location.x; x < 12; x++) {
+					destinationPoint.setLocation(x + 1, location.y);
+					 if (level.isLocationOutOfBounds(destinationPoint)){
+					 slidOutOfBounds = true;
+					 break;
+					 }
+
+					if (level.getSquareAt(destinationPoint).equals(
+							Square.ICESQUARE)) {
+						continue;
+					} else
+						break;
+				}
+			}
+
+			currentBoard.iceSquareAnimation(this.location, destinationPoint, slidOutOfBounds);
+			
+			if(slidOutOfBounds == true){
+				this.location = level.getHerderStart();
+				playerstats.removeLife();
+				this.lives--;
+			}
+			else this.location = destinationPoint;
+		}
+
 		else if (level.getSquareAt(newPoint).equals(Square.BREAKABLE_ROCK)) {
 
 			if (itemEquipped.equals("PICKAXE")) {
 				currentBoard.pickRockAnimation();
 				this.location = newPoint;
 				currentBoard.animateMovement(this.location);
-				level.setSquareAt(location, Square.GRASS);
-				currentBoard.updateSquareAt(this.location, Square.GRASS);
+				level.setSquareAt(location, level.getBackupSquare());
+				currentBoard.updateSquareAt(this.location,
+						level.getBackupSquare());
 			} else {
-				counter ++;
+				counter++;
 				if (counter == 5) {
 					currentBoard
-					.chatDisplay("Maybe i can break this with something?");
+							.chatDisplay("Maybe i can break this with something?");
 					counter = 0;
 				}
 			}
 		}
 
 		else if (level.getSquareAt(newPoint).equals(Square.BABYSHEEP)) {
-			counter ++;
+			counter++;
 			if (counter > 2) {
 				currentBoard.chatDisplay("Press \"D\" to pick up the sheep.");
 				counter = 0;
@@ -180,22 +256,21 @@ public class Herder {
 		}
 
 		else if (level.getSquareAt(newPoint).equals(Square.VFENCE)) {
-			counter ++;
+			counter++;
 			if (counter == 5) {
-				currentBoard
-				.chatDisplay("It's a fence ...");
+				currentBoard.chatDisplay("It's a fence ...");
 				counter = 0;
 			}
 		}
 
 		else if (level.getSquareAt(newPoint).equals(Square.HFENCE)) {
-			counter ++;
+			counter++;
 			if (counter == 5) {
-				currentBoard
-				.chatDisplay("It's a fence ...");
+				currentBoard.chatDisplay("It's a fence ...");
 				counter = 0;
 			}
-		} else if (level.getSquareAt(newPoint).equals(Square.BIGSHEEP)) {
+		} else if (level.getSquareAt(newPoint).equals(Square.BIGSHEEP)
+				|| level.getSquareAt(newPoint).equals(Square.SNOWBIGSHEEP)) {
 			counter++;
 			if (counter == 5) {
 				currentBoard
@@ -287,33 +362,49 @@ public class Herder {
 	}
 
 	public void smackSheep(Point p) {
-		
-		if (!level.isLocationOutOfBounds(new Point(p.x + 1, p.y)) && level.isSquareValid(new Point(p.x + 2, p.y))) {
+
+		if (!level.isLocationOutOfBounds(new Point(p.x + 1, p.y))
+				&& level.isSquareValid(new Point(p.x + 2, p.y))) {
 			if (level.getSquareAt(new Point(p.x + 1, p.y)).equals(
-					Square.BIGSHEEP)) {
+					Square.BIGSHEEP)
+					|| level.getSquareAt(new Point(p.x + 1, p.y)).equals(
+							Square.SNOWBIGSHEEP)) {
 				currentBoard.animateSheepMovement(new Point(p.x + 1, p.y),
 						new Point(p.x + 2, p.y));
+				setSmacked(false);
 			}
 		}
-		if (!level.isLocationOutOfBounds(new Point(p.x - 1, p.y)) && level.isSquareValid(new Point(p.x - 2, p.y))) {
+		if (!level.isLocationOutOfBounds(new Point(p.x - 1, p.y))
+				&& level.isSquareValid(new Point(p.x - 2, p.y))) {
 			if (level.getSquareAt(new Point(p.x - 1, p.y)).equals(
-					Square.BIGSHEEP)) {
+					Square.BIGSHEEP)
+					|| level.getSquareAt(new Point(p.x - 1, p.y)).equals(
+							Square.SNOWBIGSHEEP)) {
 				currentBoard.animateSheepMovement(new Point(p.x - 1, p.y),
 						new Point(p.x - 2, p.y));
+				setSmacked(false);
 			}
 		}
-		if (!level.isLocationOutOfBounds(new Point(p.x, p.y + 1)) && level.isSquareValid(new Point(p.x, p.y + 2))) {
+		if (!level.isLocationOutOfBounds(new Point(p.x, p.y + 1))
+				&& level.isSquareValid(new Point(p.x, p.y + 2))) {
 			if (level.getSquareAt(new Point(p.x, p.y + 1)).equals(
-					Square.BIGSHEEP)) {
+					Square.BIGSHEEP)
+					|| level.getSquareAt(new Point(p.x, p.y + 1)).equals(
+							Square.SNOWBIGSHEEP)) {
 				currentBoard.animateSheepMovement(new Point(p.x, p.y + 1),
 						new Point(p.x, p.y + 2));
+				setSmacked(false);
 			}
 		}
-		if (!level.isLocationOutOfBounds(new Point(p.x, p.y - 1)) && level.isSquareValid(new Point(p.x, p.y - 2))) {
+		if (!level.isLocationOutOfBounds(new Point(p.x, p.y - 1))
+				&& level.isSquareValid(new Point(p.x, p.y - 2))) {
 			if (level.getSquareAt(new Point(p.x, p.y - 1)).equals(
-					Square.BIGSHEEP)) {
+					Square.BIGSHEEP)
+					|| level.getSquareAt(new Point(p.x, p.y - 1)).equals(
+							Square.SNOWBIGSHEEP)) {
 				currentBoard.animateSheepMovement(new Point(p.x, p.y - 1),
 						new Point(p.x, p.y - 2));
+				setSmacked(false);
 			}
 		}
 	}
@@ -321,10 +412,69 @@ public class Herder {
 	public void pickUpSheep() {
 		if (level.getSquareAt(location).equals(Square.BABYSHEEP)) {
 			GameSounds.playBaa();
-			level.setSquareAt(location, Square.GRASS);
-			currentBoard.updateSquareAt(location, Square.GRASS);
+			level.setSquareAt(location, level.getBackupSquare());
+			currentBoard.updateSquareAt(location, level.getBackupSquare());
 			playerstats.sheepCaught();
 		}
 	}
 
+	public boolean killedSheep() {
+		
+		if (!level.isLocationOutOfBounds(new Point(location.x + 1, location.y))) {
+			if ((level.getSquareAt(new Point(location.x + 1, location.y))
+					.equals(Square.BIGSHEEP) || level.getSquareAt(
+					new Point(location.x + 1, location.y)).equals(
+					Square.SNOWBIGSHEEP))
+					&& level.isLocationOutOfBounds(new Point(location.x + 2,
+							location.y))) {
+				if (this.smackedSheep == true) {
+					return true;
+				}
+			}
+		}
+
+		if (!level.isLocationOutOfBounds(new Point(location.x - 1, location.y))) {
+			if ((level.getSquareAt(new Point(location.x - 1, location.y))
+					.equals(Square.BIGSHEEP) || level.getSquareAt(
+					new Point(location.x - 1, location.y)).equals(
+					Square.SNOWBIGSHEEP))
+					&& level.isLocationOutOfBounds(new Point(location.x - 2,
+							location.y))) {
+				if (this.smackedSheep == true) {
+					return true;
+				}
+			}
+		}
+		if (!level.isLocationOutOfBounds(new Point(location.x, location.y + 1))) {
+			if ((level.getSquareAt(new Point(location.x, location.y + 1))
+					.equals(Square.BIGSHEEP) || level.getSquareAt(
+					new Point(location.x, location.y + 1)).equals(
+					Square.SNOWBIGSHEEP))
+					&& level.isLocationOutOfBounds(new Point(location.x,
+							location.y + 2))) {
+				if (this.smackedSheep == true) {
+					return true;
+				}
+			}
+		}
+
+		if (!level.isLocationOutOfBounds(new Point(location.x, location.y - 1))) {
+			if ((level.getSquareAt(new Point(location.x, location.y - 1))
+					.equals(Square.BIGSHEEP) || level.getSquareAt(
+					new Point(location.x, location.y - 1)).equals(
+					Square.SNOWBIGSHEEP))
+					&& level.isLocationOutOfBounds(new Point(location.x,
+							location.y - 2))) {
+				if (this.smackedSheep == true) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public void setSmacked(boolean smacked) {
+		this.smackedSheep = smacked;
+	}
 }
