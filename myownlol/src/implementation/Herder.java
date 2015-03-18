@@ -47,9 +47,11 @@ public class Herder {
 
 	private boolean killedSheep;
 	private boolean smackedSheep;
+	
+	private SheepHerder sh;
 
 	public Herder(Point startLocation, Condition con, Level currentLevel,
-			BoardDisplay currentBoard, PlayerStats playerStats) {
+			BoardDisplay currentBoard, PlayerStats playerStats, SheepHerder sh) {
 
 		this.group = new Group();
 
@@ -62,7 +64,8 @@ public class Herder {
 		this.playerstats = playerStats;
 		this.sheepCaught = 0;
 		this.inventorylist = new ArrayList<Item>();
-		this.cd = new ConsoleDisplay(this);
+		this.sh = sh;
+		this.cd = new ConsoleDisplay(this, this.sh);
 		this.cd.relocate(600, 0);
 
 		this.group.getChildren().add(cd);

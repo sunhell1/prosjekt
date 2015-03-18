@@ -57,13 +57,15 @@ public class BoardDisplay {
 	private Image hfence;
 
 	private Level level;
+	
+	private SheepHerder sheepHerder;
 
 	private int sheepCounter = 0;
 	private int treeCounter = 0;
 
 	final int PREFERRED_DIM = 50;
 
-	public BoardDisplay(int width, int height, Level level) {
+	public BoardDisplay(int width, int height, Level level, SheepHerder sh) {
 
 		this.level = level;
 		this.squares = this.level.getBoardLayout();
@@ -71,6 +73,8 @@ public class BoardDisplay {
 		this.square = new GridPane();
 
 		this.group = new Group();
+		
+		this.sheepHerder = sh;
 
 		this.herderImage = Square.HERDER.getImage();
 		this.sheepImage = Square.BIGSHEEP.getImage();
@@ -204,6 +208,8 @@ public class BoardDisplay {
 
 	public void iceSquareAnimation(Point startPoint, Point endPoint,
 			boolean animateToStart) {
+		
+		sheepHerder.setBlocked(true);
 
 		boolean aniToStart = animateToStart;
 
@@ -220,6 +226,7 @@ public class BoardDisplay {
 
 		PathTransition pt = new PathTransition(Duration.millis(1500), path,
 				herder);
+		
 		pt.play();
 
 		RotateTransition rotateTransition = new RotateTransition(
@@ -233,16 +240,20 @@ public class BoardDisplay {
 		herder.setX(endPoint.x * PREFERRED_DIM);
 		herder.setY(endPoint.y * PREFERRED_DIM);
 
-
-
+		
 		if (aniToStart == true) {
 			pt.setOnFinished(event -> slideOutOfMap());
+			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
 
 		}
+		
+		else pt.setOnFinished(event -> sheepHerder.setBlocked(false));
 
 	}
 
 	private void slideOutOfMap() {
+		
+		sheepHerder.setBlocked(true);
 		
 		Timeline slideLine = new Timeline();
 		
@@ -257,9 +268,14 @@ public class BoardDisplay {
 		
 		slideLine.play();
 		
+		slideLine.setOnFinished(event -> sheepHerder.setBlocked(false));
+		
 	}
 
 	public void animateMovement(Point p) {
+		
+		sheepHerder.setBlocked(true);
+		
 		Path path = new Path();
 
 		double px = p.x * PREFERRED_DIM;
@@ -277,9 +293,13 @@ public class BoardDisplay {
 				Duration.millis(150), path, herder);
 
 		pathTransition.play();
-
+		
 		herder.setX(px);
 		herder.setY(py);
+		
+		pathTransition.setOnFinished(event -> sheepHerder.setBlocked(false));
+
+
 	}
 
 	public void animateWolfMovement(Point p) {
@@ -303,6 +323,8 @@ public class BoardDisplay {
 	}
 
 	public void animateToStart(Point p) {
+		
+		sheepHerder.setBlocked(true);
 
 		if (herder.getX() == 0 && herder.getY() == 0) {
 
@@ -314,6 +336,8 @@ public class BoardDisplay {
 			PathTransition pt = new PathTransition(Duration.millis(1000), path,
 					herder);
 			pt.play();
+			
+			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
 
 			herder.setX(0);
 			herder.setY(0);
@@ -335,6 +359,8 @@ public class BoardDisplay {
 			PathTransition pt = new PathTransition(Duration.millis(1000), path,
 					herder);
 			pt.play();
+			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
+
 			
 			herder.setX(px);
 			herder.setY(py);
@@ -353,6 +379,9 @@ public class BoardDisplay {
 	}
 
 	public void pickRockAnimation() {
+		
+		sheepHerder.setBlocked(true);
+		
 		Timeline timeline = new Timeline();
 		timeline.setCycleCount(2);
 		timeline.setAutoReverse(true);
@@ -383,6 +412,7 @@ public class BoardDisplay {
 			@Override
 			public void handle(ActionEvent event) {
 				changeHerderImage(herderPickAxe);
+				sheepHerder.setBlocked(false);
 
 			}
 

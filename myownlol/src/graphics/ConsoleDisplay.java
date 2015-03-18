@@ -23,10 +23,12 @@ public class ConsoleDisplay extends Pane {
 	private int layY;
 	
 	private Herder herder;
+	private SheepHerder sh;
 
-	public ConsoleDisplay(Herder herder) {
+	public ConsoleDisplay(Herder herder, SheepHerder sh) {
 
 		this.herder = herder;
+		this.sh = sh;
 
 		this.setPrefHeight(height);
 		this.setPrefWidth(width);

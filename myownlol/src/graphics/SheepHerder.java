@@ -36,6 +36,7 @@ public class SheepHerder extends Scene {
 	private Wolf wolf;
 
 	private boolean winner;
+	private boolean blocked;
 
 	private Level level;
 
@@ -110,10 +111,10 @@ public class SheepHerder extends Scene {
 		statsDisplay.relocate(0, 600);
 
 		this.bd = new BoardDisplay(Constants.BOARD_WIDTH,
-				Constants.BOARD_HEIGHT, level);
+				Constants.BOARD_HEIGHT, level, this);
 
 		this.herder = new Herder(level.getHerderStart(), Condition.ALIVE,
-				this.level, this.bd, this.statsDisplay);
+				this.level, this.bd, this.statsDisplay, this);
 
 		this.sheepCount = level.getBigSheepCount() + level.getBabySheepCount();
 
@@ -128,12 +129,16 @@ public class SheepHerder extends Scene {
 
 		placePlayer();
 		placeTrees();
+		
 
-		this.setOnKeyReleased(event -> keyReleased(event));
+		this.setOnKeyPressed(event -> keyPressed(event));
 	}
 
-	public void keyReleased(KeyEvent e) {
-		if (e.getCode() == KeyCode.ESCAPE) {
+	public void keyPressed(KeyEvent e) {
+		if (isBlocked()){
+			return;
+		}
+		else if (e.getCode() == KeyCode.ESCAPE) {
 			gui.closePrimary();
 		} else if (e.getCode() == KeyCode.UP) {
 			herder.move(herder.getLocation(), Direction.NORTH);
@@ -178,6 +183,10 @@ public class SheepHerder extends Scene {
 				gameFlow();
 			}
 		}
+	}
+
+	private boolean isBlocked() {
+		return this.blocked;
 	}
 
 	public void mouseClicked(MouseEvent e, String state) {
@@ -293,5 +302,9 @@ public class SheepHerder extends Scene {
 				break;
 			}
 		}
+	}
+	
+	public void setBlocked(boolean blocked){
+		this.blocked = blocked;
 	}
 }
