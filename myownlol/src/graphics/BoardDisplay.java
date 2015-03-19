@@ -1,8 +1,10 @@
 package graphics;
 
 import implementation.Level;
+import implementation.Sheep;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import enums.Constants;
 import enums.Square;
@@ -95,13 +97,6 @@ public class BoardDisplay {
 			trees[i].setImage(treeImage);
 		}
 
-		// for (int i = 0; i < sheepArray.length; i++) {
-		// sheepArray[i] = new ImageView();
-		// sheepArray[i].setFitHeight(PREFERRED_DIM);
-		// sheepArray[i].setFitWidth(PREFERRED_DIM);
-		// sheepArray[i].setImage(sheepImage);
-		// }
-
 		herder = new ImageView();
 		herder.setFitHeight(PREFERRED_DIM);
 		herder.setFitWidth(PREFERRED_DIM);
@@ -155,23 +150,15 @@ public class BoardDisplay {
 		wolf.setX(p.x * PREFERRED_DIM);
 		wolf.setY(p.y * PREFERRED_DIM);
 	}
+	
+	public void drawSheep(ArrayList<Sheep> sheep) {
+		
+	}
 
 	public void drawTrees(Point p) {
 		trees[treeCounter].setX(p.x * PREFERRED_DIM);
 		trees[treeCounter++].setY(p.y * PREFERRED_DIM);
 	}
-
-	// public void removeSheep(Point p) {
-	// for (ImageView img : sheepArray) {
-	//
-	// if (img.getX() == p.getX() * PREFERRED_DIM
-	// && img.getY() == p.getY() * PREFERRED_DIM) {
-	//
-	// group.getChildren().remove(img);
-	//
-	// }
-	// }
-	// }
 
 	// public void beerAnimation() {
 	// RotateTransition rotateTransition = new RotateTransition(
@@ -243,32 +230,36 @@ public class BoardDisplay {
 		
 		if (aniToStart == true) {
 			pt.setOnFinished(event -> slideOutOfMap());
-			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
-
+		
 		}
 		
-		else pt.setOnFinished(event -> sheepHerder.setBlocked(false));
-
+		else {
+		pt.setOnFinished(event -> sheepHerder.setBlocked(false));
+		herder.setX(endPoint.x * PREFERRED_DIM);
+		herder.setY(endPoint.y * PREFERRED_DIM);
+		}
+		
 	}
 
+	
+
 	private void slideOutOfMap() {
-		
-		sheepHerder.setBlocked(true);
 		
 		Timeline slideLine = new Timeline();
 		
 		slideLine.setCycleCount(1);
 		slideLine.setAutoReverse(false);
 		
-		KeyFrame ani1 = new KeyFrame(Duration.millis(0), event -> damageAnimation());
-		KeyFrame ani2 = new KeyFrame(Duration.millis(500), event -> animateToStart(level.getHerderStart()));
+		KeyFrame ani1 = new KeyFrame(Duration.millis(200), event -> animateToStart(level.getHerderStart()));
+		System.out.println("ANIMERER TIL START HER!");
+		KeyFrame ani2 = new KeyFrame(Duration.millis(500), event -> damageAnimation());
+		System.out.println("ANIMERER DAMAGEANIMATION");
+		
 		
 		slideLine.getKeyFrames().add(ani1);
 		slideLine.getKeyFrames().add(ani2);
 		
 		slideLine.play();
-		
-		slideLine.setOnFinished(event -> sheepHerder.setBlocked(false));
 		
 	}
 
@@ -355,15 +346,20 @@ public class BoardDisplay {
 					new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
 			path.getElements().add(
 					new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+			
+			System.out.println("HERDER SIN POS: x= " + herder.getX() + " y= " + herder.getY());
+	
 
 			PathTransition pt = new PathTransition(Duration.millis(1000), path,
 					herder);
 			pt.play();
+		
 			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
-
 			
-			herder.setX(px);
-			herder.setY(py);
+			herder.setX(level.getHerderStart().x * PREFERRED_DIM);
+			herder.setY(level.getHerderStart().y * PREFERRED_DIM);
+			
+			System.out.println("HERDER SIN POS: x= " + herder.getX() + " y= " + herder.getY());
 
 		}
 	}

@@ -1,18 +1,19 @@
 package implementation;
 
 import java.awt.Point;
-
 import java.util.ArrayList;
 import java.util.Stack;
 
 import javafx.scene.image.ImageView;
 import enums.Condition;
 import enums.Direction;
+import enums.SUMMER_SQUARE;
 import enums.Square;
 import enums.Constants;
+import graphics.SheepHerder;
 
 public class Level {
-	// private ArrayList<Sheep> sheepArray;
+	private ArrayList<Sheep> sheepArray;
 
 	private Square[][] level;
 
@@ -30,7 +31,7 @@ public class Level {
 
 	private Square backupSquare;
 
-	public Level(int levelNumber) {
+	public Level(int levelNumber, SheepHerder sh) {
 
 		this.babySheepCount = 0;
 		this.bigSheepCount = 0;
@@ -42,7 +43,6 @@ public class Level {
 
 		switch (levelNumber) {
 		case 3:
-
 			this.backupSquare = Square.GRASS;
 			level = Constants.levelOne();
 			this.hasWolf = false;
@@ -54,21 +54,12 @@ public class Level {
 					}
 				}
 			}
-
-			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
-				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
-					if (level[i][j].equals(Square.BABYSHEEP)) {
-						this.babySheepCount++;
-					}
-				}
-			}
-
-			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
-				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
-					if (level[i][j].equals(Square.BIGSHEEP)) {
-						this.bigSheepCount++;
-					}
-				}
+			
+			Sheep sheep1 = new Sheep(new Point(6,6), Condition.ALIVE, Direction.WEST, this, sh);
+			sheepArray.add(sheep1);
+			
+			for (Sheep sheep : sheepArray) {
+				this.bigSheepCount++;
 			}
 
 			herderStart = new Point(0, 0);
@@ -202,12 +193,12 @@ public class Level {
 		level[p.x][p.y] = sq;
 	}
 
-	// public boolean hasSheep() {
-	// if (sheepArray.size() > 0) {
-	// return true;
-	// }
-	// return false;
-	// }
+	public boolean hasSheep() {
+		if (sheepArray.size() > 0) {
+			return true;
+		}
+		return false;
+	}
 
 	public boolean hasWolf() {
 		return this.hasWolf;
@@ -253,6 +244,10 @@ public class Level {
 
 	public Square getBackupSquare() {
 		return this.backupSquare;
+	}
+	
+	public ArrayList<Sheep> getSheepArray() {
+		return this.sheepArray;
 	}
 
 }

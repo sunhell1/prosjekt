@@ -31,7 +31,7 @@ import implementation.Wolf;
 
 public class SheepHerder extends Scene {
 
-	// private ArrayList<Sheep> sheeps;
+	private ArrayList<Sheep> sheeps;
 	private Herder herder;
 	private Wolf wolf;
 
@@ -105,7 +105,7 @@ public class SheepHerder extends Scene {
 
 	public void initateGame(int levelNumber) {
 
-		this.level = new Level(levelCount);
+		this.level = new Level(levelCount, this);
 
 		this.statsDisplay = new PlayerStats(this.level);
 		statsDisplay.relocate(0, 600);
@@ -118,6 +118,7 @@ public class SheepHerder extends Scene {
 
 		this.sheepCount = level.getBigSheepCount() + level.getBabySheepCount();
 
+		
 		this.group.getChildren().add(herder.getGroup());
 		this.group.getChildren().add(bd.getGroup());
 		this.group.getChildren().add(statsDisplay);
@@ -129,6 +130,7 @@ public class SheepHerder extends Scene {
 
 		placePlayer();
 		placeTrees();
+		placeSheep();
 		
 
 		this.setOnKeyPressed(event -> keyPressed(event));
@@ -207,18 +209,18 @@ public class SheepHerder extends Scene {
 			initateGame(++this.levelCount);
 			break;
 		}
-
 	}
 
 	public void placePlayer() {
 		bd.drawHerder(herder.getLocation());
 	}
 
-	// public void placeSheep() {
-	// for (Sheep sheep : sheeps) {
-	// bd.drawSheep(sheep.getLocation());
-	// }
-	// }
+	public void placeSheep() {
+		this.sheeps = level.getSheepArray();
+		for (Sheep sheep : sheeps) {
+			bd.getGroup().getChildren().add(sheep);
+		}
+	}
 
 	public void placeTrees() {
 		Square[][] levelSquares = level.getBoardLayout();
@@ -267,7 +269,6 @@ public class SheepHerder extends Scene {
 				herder.takeDamage();
 			}
 		}
-
 		return 0;
 	}
 
@@ -302,6 +303,10 @@ public class SheepHerder extends Scene {
 				break;
 			}
 		}
+	}
+	
+	public BoardDisplay getBoardDisplay() {
+		return this.bd;
 	}
 	
 	public void setBlocked(boolean blocked){
