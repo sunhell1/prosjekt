@@ -13,7 +13,6 @@ import enums.Constants;
 import graphics.SheepHerder;
 
 public class Level {
-	private ArrayList<Sheep> sheepArray;
 
 	private Square[][] level;
 
@@ -26,12 +25,14 @@ public class Level {
 	private Point fencePoint;
 
 	private Stack<Point> wolfMoves;
+	private Stack<Point> sheepStarts;
+	
 	private boolean hasWolf;
 	private boolean fence;
 
 	private Square backupSquare;
 
-	public Level(int levelNumber, SheepHerder sh) {
+	public Level(int levelNumber) {
 
 		this.babySheepCount = 0;
 		this.bigSheepCount = 0;
@@ -55,13 +56,6 @@ public class Level {
 				}
 			}
 			
-			Sheep sheep1 = new Sheep(new Point(6,6), Condition.ALIVE, Direction.WEST, this, sh);
-			sheepArray.add(sheep1);
-			
-			for (Sheep sheep : sheepArray) {
-				this.bigSheepCount++;
-			}
-
 			herderStart = new Point(0, 0);
 
 			break;
@@ -101,6 +95,17 @@ public class Level {
 
 			break;
 		case 1:
+			
+			sheepStarts = new Stack<Point>();
+			Point sheep1 = new Point(6,9);
+			Point sheep2 = new Point(6,10);
+			sheepStarts.push(sheep1);
+			sheepStarts.push(sheep2);
+			
+			for (int i = 0; i < sheepStarts.size(); i++) {
+				this.bigSheepCount++;
+			}
+
 			this.backupSquare = Square.SNOWSQUARE;
 
 			for (int i = 0; i < Constants.BOARD_HEIGHT; i++) {
@@ -127,23 +132,6 @@ public class Level {
 			level[8][1] = Square.SNOWTREE;
 			level[0][9] = Square.SNOWROCK;
 			level[9][10] = Square.SNOWROCK;
-			level[9][9] = Square.SNOWBIGSHEEP;
-
-			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
-				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
-					if (level[i][j].equals(Square.BABYSHEEP)) {
-						this.babySheepCount++;
-					}
-				}
-			}
-			for (int i = 0; i < Constants.BOARD_WIDTH; i++) {
-				for (int j = 0; j < Constants.BOARD_HEIGHT; j++) {
-					if (level[i][j].equals(Square.BIGSHEEP)
-							|| level[i][j].equals(Square.SNOWBIGSHEEP)) {
-						this.bigSheepCount++;
-					}
-				}
-			}
 
 			this.hasWolf = false;
 			this.fence = false;
@@ -188,16 +176,20 @@ public class Level {
 	public Stack<Point> getWolfStack() {
 		return this.wolfMoves;
 	}
+	
+	public Stack<Point> getSheepStarts() {
+		return this.sheepStarts;
+	}
 
 	public void setSquareAt(Point p, Square sq) {
 		level[p.x][p.y] = sq;
 	}
 
 	public boolean hasSheep() {
-		if (sheepArray.size() > 0) {
-			return true;
+		if (sheepStarts.isEmpty()) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public boolean hasWolf() {
@@ -217,7 +209,6 @@ public class Level {
 		if (isLocationOutOfBounds(p)) {
 			return false;
 		} else if (getSquareAt(p).equals(Square.BABYSHEEP)
-				|| getSquareAt(p).equals(Square.BIGSHEEP)
 				|| getSquareAt(p).equals(Square.ROCK)
 				|| getSquareAt(p).equals(Square.TREE)
 				|| getSquareAt(p).equals(Square.BREAKABLE_ROCK)
@@ -225,8 +216,7 @@ public class Level {
 				|| getSquareAt(p).equals(Square.VFENCE)
 				|| getSquareAt(p).equals(Square.PICKAXESQUARE)
 				|| getSquareAt(p).equals(Square.SNOWROCK)
-				|| getSquareAt(p).equals(Square.SNOWTREE)
-				|| getSquareAt(p).equals(Square.SNOWBIGSHEEP)) {
+				|| getSquareAt(p).equals(Square.SNOWTREE)) {
 			return false;
 		} else
 			return true;
@@ -244,10 +234,6 @@ public class Level {
 
 	public Square getBackupSquare() {
 		return this.backupSquare;
-	}
-	
-	public ArrayList<Sheep> getSheepArray() {
-		return this.sheepArray;
 	}
 
 }

@@ -2,6 +2,7 @@ package graphics;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import Sounds.GameSounds;
 import sun.audio.AudioPlayer;
@@ -32,9 +33,10 @@ import implementation.Wolf;
 public class SheepHerder extends Scene {
 
 	private ArrayList<Sheep> sheeps;
+	
 	private Herder herder;
 	private Wolf wolf;
-
+	
 	private boolean winner;
 	private boolean blocked;
 
@@ -49,6 +51,8 @@ public class SheepHerder extends Scene {
 	private String state;
 
 	private Group group;
+	
+	private Stack<Point> sheepStarts;
 
 	private BackgroundDisplay backGround;
 
@@ -104,8 +108,14 @@ public class SheepHerder extends Scene {
 	}
 
 	public void initateGame(int levelNumber) {
+		
+		sheeps = new ArrayList<Sheep>();
 
-		this.level = new Level(levelCount, this);
+		this.level = new Level(levelCount);
+		this.sheepCount = level.getBigSheepCount() + level.getBabySheepCount();
+		this.sheepStarts = level.getSheepStarts();
+		
+		System.out.println(sheepStarts.size());
 
 		this.statsDisplay = new PlayerStats(this.level);
 		statsDisplay.relocate(0, 600);
@@ -116,11 +126,15 @@ public class SheepHerder extends Scene {
 		this.herder = new Herder(level.getHerderStart(), Condition.ALIVE,
 				this.level, this.bd, this.statsDisplay, this);
 
-		this.sheepCount = level.getBigSheepCount() + level.getBabySheepCount();
-
+		for(int i = 0; i <= sheepStarts.size(); i++) {
+			Sheep sheep = new Sheep(sheepStarts.pop(), Condition.ALIVE, Direction.NORTH, level, this);
+			sheeps.add(sheep);
+			this.group.getChildren().add(sheep);
+		}
 		
+		System.out.println(sheeps.size());
 		this.group.getChildren().add(herder.getGroup());
-		this.group.getChildren().add(bd.getGroup());
+		this.group.getChildren().add(bd);
 		this.group.getChildren().add(statsDisplay);
 
 		if (level.hasWolf()) {
@@ -130,7 +144,7 @@ public class SheepHerder extends Scene {
 
 		placePlayer();
 		placeTrees();
-		placeSheep();
+		placeSheep(sheeps);
 		
 
 		this.setOnKeyPressed(event -> keyPressed(event));
@@ -173,10 +187,6 @@ public class SheepHerder extends Scene {
 				if (sheepFenced()) {
 					gameFlow();
 				}
-				herder.setSmacked(true);
-				if (herder.killedSheep()) {
-					loserScene();
-				}
 			}
 		} else if (e.getCode() == KeyCode.D) {
 			if (herder.isStandingNextToSheep(herder.getLocation())) {
@@ -215,10 +225,10 @@ public class SheepHerder extends Scene {
 		bd.drawHerder(herder.getLocation());
 	}
 
-	public void placeSheep() {
-		this.sheeps = level.getSheepArray();
+	public void placeSheep(ArrayList<Sheep> sheeps) {
+		this.sheeps = sheeps;
 		for (Sheep sheep : sheeps) {
-			bd.getGroup().getChildren().add(sheep);
+			bd.drawSheep(sheep);
 		}
 	}
 
@@ -311,5 +321,18 @@ public class SheepHerder extends Scene {
 	
 	public void setBlocked(boolean blocked){
 		this.blocked = blocked;
+	}
+	
+	public boolean containsSheep(Point p) {
+		for (Sheep sheep : sheeps) {
+			if(sheep.getLocation().equals(p)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public ArrayList<Sheep> getSheepArray() {
+		return this.sheeps;
 	}
 }

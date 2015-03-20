@@ -35,13 +35,13 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-public class BoardDisplay {
+public class BoardDisplay extends Group {
 
 	private GridPane square;
 
-	private Group group;
-
 	private Square[][] squares;
+	
+	ArrayList<Sheep> sheeps;
 
 	private ImageView herder;
 	private ImageView wolf;
@@ -73,8 +73,8 @@ public class BoardDisplay {
 		this.squares = this.level.getBoardLayout();
 
 		this.square = new GridPane();
-
-		this.group = new Group();
+		
+		this.sheeps = sh.getSheepArray();
 		
 		this.sheepHerder = sh;
 
@@ -129,15 +129,15 @@ public class BoardDisplay {
 			}
 		}
 
-		group.getChildren().addAll(square);
+		this.getChildren().addAll(square);
 
 		for (ImageView iv : trees) {
-			group.getChildren().add(iv);
+			this.getChildren().add(iv);
 		}
-		group.getChildren().add(herder);
+		this.getChildren().add(herder);
 
 		if (level.hasWolf()) {
-			group.getChildren().add(wolf);
+			this.getChildren().add(wolf);
 		}
 	}
 
@@ -151,8 +151,10 @@ public class BoardDisplay {
 		wolf.setY(p.y * PREFERRED_DIM);
 	}
 	
-	public void drawSheep(ArrayList<Sheep> sheep) {
-		
+	public void drawSheep(Sheep sheep) {
+		sheep.setX(sheep.getLocation().x * PREFERRED_DIM);
+		sheep.setY(sheep.getLocation().y * PREFERRED_DIM);
+		this.getChildren().add(sheep);
 	}
 
 	public void drawTrees(Point p) {
@@ -240,6 +242,55 @@ public class BoardDisplay {
 		}
 		
 	}
+	
+	public void sheepIceSquareAnimation(Point startPoint, Point endPoint,
+			Sheep sheep) {
+		
+		sheepHerder.setBlocked(true);
+		
+		boolean sheepDied = false;
+
+		Path path = new Path();
+		path.getElements().add(
+				new MoveTo(startPoint.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						startPoint.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new LineTo(endPoint.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						endPoint.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new MoveTo(endPoint.x * PREFERRED_DIM + PREFERRED_DIM / 2,
+						endPoint.y * PREFERRED_DIM + PREFERRED_DIM / 2));
+
+		PathTransition pt = new PathTransition(Duration.millis(1500), path,
+				sheep);
+		
+		pt.play();
+
+		RotateTransition rotateTransition = new RotateTransition(
+				Duration.millis(1500), sheep);
+		rotateTransition.setByAngle(360);
+		rotateTransition.setCycleCount(1);
+		rotateTransition.setAutoReverse(true);
+		rotateTransition.play();
+	
+		
+		sheep.setX(endPoint.x * PREFERRED_DIM);
+		sheep.setY(endPoint.y * PREFERRED_DIM);
+
+		
+		
+		if (sheepDied == true) {
+			pt.setOnFinished(event -> slideOutOfMap());
+		
+		}
+		
+		else {
+		pt.setOnFinished(event -> sheepHerder.setBlocked(false));
+		sheep.setX(endPoint.x * PREFERRED_DIM);
+		sheep.setY(endPoint.y * PREFERRED_DIM);
+		}
+		
+	}
 
 	
 
@@ -263,7 +314,7 @@ public class BoardDisplay {
 		
 	}
 
-	public void animateMovement(Point p) {
+	public void animateHerderMovement(Point p) {
 		
 		sheepHerder.setBlocked(true);
 		
@@ -411,7 +462,6 @@ public class BoardDisplay {
 				sheepHerder.setBlocked(false);
 
 			}
-
 		});
 	}
 
@@ -444,7 +494,7 @@ public class BoardDisplay {
 	}
 
 	public Group getGroup() {
-		return this.group;
+		return this;
 	}
 
 	private int convertPointToIndex(Point p) {
@@ -460,48 +510,31 @@ public class BoardDisplay {
 	}
 
 	public void animateSheepMovement(Point location, Point destination) {
+		
+		for(int i = 0; i < sheeps.size(); i++) {
+			if(sheeps.get(i).getLocation().equals(location)) {
+				Path path = new Path();
 
-		this.level.setSquareAt(location, level.getBackupSquare());
+				double px = destination.x * PREFERRED_DIM;
+				double py = destination.y * PREFERRED_DIM;
 
-		if (this.level.getSquareAt(destination).equals(Square.GRASS)) {
-			this.level.setSquareAt(destination, Square.BIGSHEEP);
-		} else
-			this.level.setSquareAt(destination, Square.SNOWBIGSHEEP);
+				path.getElements().add(
+						new MoveTo(sheeps.get(i).getX() + PREFERRED_DIM / 2, sheeps.get(i).getY()
+								+ PREFERRED_DIM / 2));
+				path.getElements().add(
+						new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+				path.getElements().add(
+						new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
 
-		ImageView iv = new ImageView();
-		iv.setFitWidth(PREFERRED_DIM);
-		iv.setFitHeight(PREFERRED_DIM);
-		iv.setImage(sheepImage);
+				PathTransition pathTransition = new PathTransition(
+						Duration.millis(150), path, sheeps.get(i));
 
-		Path path = new Path();
-		path.getElements().add(
-				new MoveTo(location.x * PREFERRED_DIM + PREFERRED_DIM / 2,
-						location.y * PREFERRED_DIM + PREFERRED_DIM / 2));
-		path.getElements().add(
-				new LineTo(destination.x * PREFERRED_DIM + PREFERRED_DIM / 2,
-						destination.y * PREFERRED_DIM + PREFERRED_DIM / 2));
-		path.getElements().add(
-				new MoveTo(destination.x * PREFERRED_DIM + PREFERRED_DIM / 2,
-						destination.y * PREFERRED_DIM + PREFERRED_DIM / 2));
-
-		PathTransition pt = new PathTransition(Duration.millis(100), path, iv);
-
-		pt.play();
-
-		pt.setOnFinished(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				iv.setDisable(true);
-				iv.setVisible(false);
-				updateSquareAt(location, level.getBackupSquare());
-				if (level.getSquareAt(destination).equals(Square.GRASS)) {
-					updateSquareAt(destination, Square.BIGSHEEP);
-				} else
-					updateSquareAt(destination, Square.SNOWBIGSHEEP);
-
+				pathTransition.play();
+				
+				sheeps.get(i).setX(px);
+				sheeps.get(i).setY(py);
 			}
-		});
+		}
 	}
 
 	public void chatDisplay(String stringtext) {
@@ -543,7 +576,7 @@ public class BoardDisplay {
 
 		}
 
-		this.group.getChildren().add(text);
+		this.getChildren().add(text);
 
 		FadeTransition ft = new FadeTransition(Duration.millis(1500), text);
 		ft.setAutoReverse(false);
@@ -553,14 +586,11 @@ public class BoardDisplay {
 		ft.play();
 
 		ft.setOnFinished(new EventHandler<ActionEvent>() {
-
 			@Override
 			public void handle(ActionEvent arg0) {
 				text.setVisible(false);
 				text.setDisable(true);
-
 			}
-
 		});
 
 	}

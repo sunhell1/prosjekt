@@ -59,10 +59,10 @@ public class Sheep extends ImageView{
 		Point newPoint = new Point(p.x + dir.getX(), p.y + dir.getY());
 
 		if (currentLevel.isLocationOutOfBounds(newPoint)) {
-
+			killSheep();
 		} else if (currentLevel.getSquareAt(newPoint).equals(Square.HOLE)) {
+			currentBoard.animateSheepMovement(this.location, newPoint);
 			this.location = newPoint;
-			currentBoard.animateMovement(this.location);
 
 		} else if (currentLevel.getSquareAt(newPoint).equals(Square.ROCK)
 				|| currentLevel.getSquareAt(newPoint).equals(Square.SNOWROCK)) {
@@ -138,28 +138,25 @@ public class Sheep extends ImageView{
 				}
 			}
 
-			currentBoard.iceSquareAnimation(this.location, destinationPoint, slidOutOfBounds);
+			currentBoard.sheepIceSquareAnimation(this.location, destinationPoint, this);
 			
-			if(slidOutOfBounds == true){
-				this.location = currentLevel.getHerderStart();
-				
-			}
-			else this.location = destinationPoint;
+			this.location = destinationPoint;
 			
 		} else if (currentLevel.getSquareAt(newPoint).equals(Square.BREAKABLE_ROCK)) {
 		} else if (currentLevel.getSquareAt(newPoint).equals(Square.BABYSHEEP)) {
 		} else if (currentLevel.getSquareAt(newPoint).equals(Square.VFENCE)) {
 		} else if (currentLevel.getSquareAt(newPoint).equals(Square.HFENCE)) {
-		} else if (currentLevel.getSquareAt(newPoint).equals(Square.BIGSHEEP)
-				|| currentLevel.getSquareAt(newPoint).equals(Square.SNOWBIGSHEEP)) {
+		} else if (sh.containsSheep(newPoint)) {
 		}
 		else {
+			currentBoard.animateSheepMovement(this.location, newPoint);
 			this.location = newPoint;
-			currentBoard.animateMovement(this.location);
 		}
 	}
 	
 	public void killSheep() {
 		currentBoard.getGroup().getChildren().remove(this);
 	}
+	
+
 }
