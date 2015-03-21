@@ -59,8 +59,6 @@ public class Sheep extends ImageView {
 		Point newPoint = new Point(p.x + dir.getX(), p.y + dir.getY());
 
 		if (currentLevel.isLocationOutOfBounds(newPoint)) {
-			killSheep();
-			System.out.println("killsheep() called");
 		} else if (currentLevel.getSquareAt(newPoint).equals(Square.HOLE)) {
 			currentBoard.animateSheepMovement(this.location, newPoint);
 			this.location = newPoint;
@@ -74,13 +72,13 @@ public class Sheep extends ImageView {
 		} else if (currentLevel.getSquareAt(newPoint).equals(Square.ICESQUARE)) {
 			this.location = newPoint;
 			Point destinationPoint = new Point();
-			boolean slidOutOfBounds = false;
+			boolean sheepDied = false;
 
 			if (dir.equals(Direction.NORTH)) {
 				for (int y = location.y; y >= 0; y--) {
 					destinationPoint.setLocation(location.x, y - 1);
 					if (currentLevel.isLocationOutOfBounds(destinationPoint)) {
-						slidOutOfBounds = true;
+						sheepDied = true;
 						break;
 					}
 
@@ -96,7 +94,7 @@ public class Sheep extends ImageView {
 				for (int x = location.x; x >= 0; x--) {
 					destinationPoint.setLocation(x - 1, location.y);
 					if (currentLevel.isLocationOutOfBounds(destinationPoint)) {
-						slidOutOfBounds = true;
+						sheepDied = true;
 						break;
 					}
 
@@ -112,7 +110,7 @@ public class Sheep extends ImageView {
 				for (int y = location.y; y < 12; y++) {
 					destinationPoint.setLocation(location.x, y + 1);
 					if (currentLevel.isLocationOutOfBounds(destinationPoint)) {
-						slidOutOfBounds = true;
+						sheepDied = true;
 						break;
 					}
 
@@ -128,7 +126,7 @@ public class Sheep extends ImageView {
 				for (int x = location.x; x < 12; x++) {
 					destinationPoint.setLocation(x + 1, location.y);
 					if (currentLevel.isLocationOutOfBounds(destinationPoint)) {
-						slidOutOfBounds = true;
+						sheepDied = true;
 						break;
 					}
 
@@ -141,7 +139,7 @@ public class Sheep extends ImageView {
 			}
 
 			currentBoard.sheepIceSquareAnimation(this.location,
-					destinationPoint, this);
+					destinationPoint, this, sheepDied);
 			this.location = destinationPoint;
 
 		} else if (currentLevel.getSquareAt(newPoint).equals(
@@ -155,10 +153,4 @@ public class Sheep extends ImageView {
 			this.location = newPoint;
 		}
 	}
-
-	public void killSheep() {
-		currentBoard.getGroup().getChildren().remove(this);
-		System.out.println("currentBoard.getGroup().getChildren().remove(this) called");
-	}
-
 }

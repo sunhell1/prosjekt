@@ -6,6 +6,7 @@ import implementation.Sheep;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import Sounds.GameSounds;
 import enums.Constants;
 import enums.Square;
 import javafx.animation.Animation;
@@ -242,11 +243,11 @@ public class BoardDisplay extends Group {
 	}
 
 	public void sheepIceSquareAnimation(Point startPoint, Point endPoint,
-			Sheep sheep) {
+			Sheep sheep, boolean sheepDied) {
 
 		sheepHerder.setBlocked(true);
 
-		boolean sheepDied = false;
+		boolean sheepDead = sheepDied;
 
 		Path path = new Path();
 		path.getElements().add(
@@ -274,9 +275,8 @@ public class BoardDisplay extends Group {
 		sheep.setX(endPoint.x * PREFERRED_DIM);
 		sheep.setY(endPoint.y * PREFERRED_DIM);
 
-		if (sheepDied == true) {
-			pt.setOnFinished(event -> slideOutOfMap());
-
+		if (sheepDead == true) {
+			pt.setOnFinished(event -> sheepKilledAnimation(sheep));
 		}
 
 		else {
@@ -530,6 +530,26 @@ public class BoardDisplay extends Group {
 				sheeps.get(i).setY(py);
 			}
 		}
+	}
+	
+	public void sheepKilledAnimation(Sheep sheep) {
+		
+		sheepHerder.setBlocked(true);
+		GameSounds.playBaa();
+		RotateTransition rotateTransition = new RotateTransition(
+				Duration.millis(1500), sheep);
+		rotateTransition.setByAngle(360);
+		rotateTransition.setCycleCount(1);
+		rotateTransition.setAutoReverse(true);
+		rotateTransition.play();
+		
+		rotateTransition.setOnFinished(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				sheepHerder.loserScene();
+			}
+		});
 	}
 
 	public void chatDisplay(String stringtext) {

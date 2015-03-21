@@ -404,15 +404,15 @@ public class Herder {
 			playerstats.sheepCaught();
 		}
 	}
-
-	public boolean killedSheep() {
-
+	
+public void killedSheep() {
+		
 		if (!level.isLocationOutOfBounds(new Point(location.x + 1, location.y))) {
 			if (sh.containsSheep(new Point(location.x + 1, location.y))
 					&& level.isLocationOutOfBounds(new Point(location.x + 2,
 							location.y))) {
 				if (this.smackedSheep == true) {
-					return true;
+					currentBoard.sheepKilledAnimation(sh.getSheep(new Point(location.x + 1, location.y)));
 				}
 			}
 		}
@@ -422,7 +422,7 @@ public class Herder {
 					&& level.isLocationOutOfBounds(new Point(location.x - 2,
 							location.y))) {
 				if (this.smackedSheep == true) {
-					return true;
+					currentBoard.sheepKilledAnimation(sh.getSheep(new Point(location.x - 1, location.y)));
 				}
 			}
 		}
@@ -431,7 +431,7 @@ public class Herder {
 					&& level.isLocationOutOfBounds(new Point(location.x,
 							location.y + 2))) {
 				if (this.smackedSheep == true) {
-					return true;
+					currentBoard.sheepKilledAnimation(sh.getSheep(new Point(location.x, location.y + 1)));
 				}
 			}
 		}
@@ -441,12 +441,10 @@ public class Herder {
 					&& level.isLocationOutOfBounds(new Point(location.x,
 							location.y - 2))) {
 				if (this.smackedSheep == true) {
-					return true;
+					currentBoard.sheepKilledAnimation(sh.getSheep(new Point(location.x, location.y - 1)));
 				}
 			}
 		}
-
-		return false;
 	}
 
 	public void setSmacked(boolean smacked) {

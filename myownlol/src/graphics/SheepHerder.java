@@ -97,7 +97,7 @@ public class SheepHerder extends Scene {
 		// GameSounds.playTheme();
 	}
 
-	private void loserScene() {
+	public void loserScene() {
 		this.group.getChildren().removeAll(bd.getGroup());
 		this.group.getChildren().remove(statsDisplay);
 		this.group.getChildren().remove(ld);
@@ -184,10 +184,7 @@ public class SheepHerder extends Scene {
 					gameFlow();
 				}
 				herder.setSmacked(true);
-				if (herder.killedSheep()) {
-					loserScene();
-				}
-
+				herder.killedSheep();
 			}
 		} else if (e.getCode() == KeyCode.D) {
 			if (herder.isStandingNextToSheep(herder.getLocation())) {
@@ -331,6 +328,15 @@ public class SheepHerder extends Scene {
 			}
 		}
 		return false;
+	}
+	
+	public Sheep getSheep(Point p) {
+		for (Sheep sheep : sheeps) {
+			if (sheep.getLocation().equals(p)) {
+				return sheep;
+			}
+		}
+		return null;
 	}
 
 	public ArrayList<Sheep> getSheepArray() {
