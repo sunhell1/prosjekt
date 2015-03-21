@@ -404,4 +404,52 @@ public class Herder {
 			playerstats.sheepCaught();
 		}
 	}
+
+	public boolean killedSheep() {
+
+		if (!level.isLocationOutOfBounds(new Point(location.x + 1, location.y))) {
+			if (sh.containsSheep(new Point(location.x + 1, location.y))
+					&& level.isLocationOutOfBounds(new Point(location.x + 2,
+							location.y))) {
+				if (this.smackedSheep == true) {
+					return true;
+				}
+			}
+		}
+
+		if (!level.isLocationOutOfBounds(new Point(location.x - 1, location.y))) {
+			if (sh.containsSheep(new Point(location.x - 1, location.y))
+					&& level.isLocationOutOfBounds(new Point(location.x - 2,
+							location.y))) {
+				if (this.smackedSheep == true) {
+					return true;
+				}
+			}
+		}
+		if (!level.isLocationOutOfBounds(new Point(location.x, location.y + 1))) {
+			if (sh.containsSheep(new Point(location.x, location.y + 1))
+					&& level.isLocationOutOfBounds(new Point(location.x,
+							location.y + 2))) {
+				if (this.smackedSheep == true) {
+					return true;
+				}
+			}
+		}
+
+		if (!level.isLocationOutOfBounds(new Point(location.x, location.y - 1))) {
+			if (sh.containsSheep(new Point(location.x, location.y - 1))
+					&& level.isLocationOutOfBounds(new Point(location.x,
+							location.y - 2))) {
+				if (this.smackedSheep == true) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public void setSmacked(boolean smacked) {
+		this.smackedSheep = smacked;
+	}
 }

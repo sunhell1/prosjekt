@@ -183,6 +183,11 @@ public class SheepHerder extends Scene {
 				if (sheepFenced()) {
 					gameFlow();
 				}
+				herder.setSmacked(true);
+				if (herder.killedSheep()) {
+					loserScene();
+				}
+
 			}
 		} else if (e.getCode() == KeyCode.D) {
 			if (herder.isStandingNextToSheep(herder.getLocation())) {
