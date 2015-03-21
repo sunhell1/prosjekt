@@ -145,6 +145,7 @@ public class SheepHerder extends Scene {
 		placeSheep(sheeps);
 
 		this.setOnKeyPressed(event -> keyPressed(event));
+		this.blocked = false;
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -201,7 +202,7 @@ public class SheepHerder extends Scene {
 
 	public void mouseClicked(MouseEvent e, String state) {
 		this.group.getChildren().removeAll(statsDisplay);
-		// this.group.getChildren().removeAll(herder.getGroup());
+		//this.group.getChildren().removeAll(herder.getGroup());
 		this.group.getChildren().removeAll(sd.getStartGroup());
 		this.group.getChildren().removeAll(wd.getWinningGroup());
 		this.group.getChildren().removeAll(ld);
