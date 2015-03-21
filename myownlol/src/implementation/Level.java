@@ -29,8 +29,12 @@ public class Level {
 	
 	private boolean hasWolf;
 	private boolean fence;
+	private boolean hasItem;
 
 	private Square backupSquare;
+	
+	private ArrayList<Item> items;
+	
 
 	public Level(int levelNumber) {
 
@@ -39,6 +43,7 @@ public class Level {
 		this.treeCount = 0;
 
 		this.fence = false;
+		this.hasItem = false;
 
 		this.level = new Square[Constants.BOARD_WIDTH][Constants.BOARD_HEIGHT];
 
@@ -95,7 +100,7 @@ public class Level {
 
 			break;
 		case 1:
-			
+			items = new ArrayList<Item>();
 			sheepStarts = new Stack<Point>();
 			Point sheep1 = new Point(6,9);
 			Point sheep2 = new Point(6,10);
@@ -135,7 +140,23 @@ public class Level {
 			level[8][1] = Square.SNOWTREE;
 			level[0][9] = Square.SNOWROCK;
 			level[9][10] = Square.SNOWROCK;
-
+			level[6][6] = Square.PICKAXESQUARE;
+			level[7][6] = Square.PICKAXESQUARE;
+			level[8][6] = Square.PICKAXESQUARE;
+			level[9][6] = Square.PICKAXESQUARE;
+			level[10][6] = Square.PICKAXESQUARE;
+			level[11][6] = Square.PICKAXESQUARE;
+			
+			Item PICKAXE = new Item("PICKAXE", Square.PICKAXE_ITEM.getImage(), 20, 30);
+			Item PICKAXE2 = new Item("PICKAXE", Square.PICKAXE_ITEM.getImage(), 20, 30);
+			Item PICKAXE3 = new Item("PICKAXE", Square.PICKAXE_ITEM.getImage(), 20, 30);
+			Item PICKAXE4 = new Item("PICKAXE", Square.PICKAXE_ITEM.getImage(), 20, 30);
+			items.add(PICKAXE);
+			items.add(PICKAXE2);
+			items.add(PICKAXE3);
+			items.add(PICKAXE4);
+			
+			this.hasItem = true;
 			this.hasWolf = false;
 			this.fence = false;
 
@@ -205,6 +226,14 @@ public class Level {
 
 	public boolean hasFencePoint() {
 		return this.fence;
+	}
+	
+	public ArrayList<Item> getItems(){
+		return this.items;
+	}
+	
+	public boolean hasItems(){
+		return this.hasItem;
 	}
 
 	public boolean isSquareValid(Point p) {

@@ -9,6 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.AudioClip;
+import javafx.scene.shape.Rectangle;
 import enums.Condition;
 import enums.Constants;
 import enums.Direction;
@@ -24,6 +25,7 @@ public class Herder {
 
 	private int lives;
 	private int counter;
+	private int hp;
 
 	private Condition con;
 
@@ -40,12 +42,12 @@ public class Herder {
 	private PlayerStats playerstats;
 
 	private ArrayList<Item> inventorylist;
+	
+	private Rectangle hpBar;
 
 	private ConsoleDisplay cd;
 	private Group group;
-
-	private Item item;
-
+	
 	private String itemEquipped;
 
 	private boolean killedSheep;
@@ -59,6 +61,10 @@ public class Herder {
 		this.group = new Group();
 
 		this.lives = Constants.MAX_LIVES;
+		this.hp = 40;
+		
+		this.hpBar = currentBoard.hpBar(hp);
+		
 		this.counter = 0;
 		this.location = startLocation;
 		this.con = con;
@@ -72,8 +78,6 @@ public class Herder {
 		this.cd.relocate(600, 0);
 
 		this.group.getChildren().add(cd);
-
-		this.item = new Item("PICKAXE", Square.GRASS.getImage());
 
 		this.itemEquipped = "";
 
@@ -123,6 +127,7 @@ public class Herder {
 			takeDamage();
 		} else if (level.getSquareAt(newPoint).equals(Square.ROCK)
 				|| level.getSquareAt(newPoint).equals(Square.SNOWROCK)) {
+			currentBoard.loseHP(hpBar, 5);
 			counter++;
 			if (counter == 5) {
 				currentBoard.chatDisplay("I think its a rock");
@@ -140,9 +145,17 @@ public class Herder {
 		}
 
 		else if (level.getSquareAt(newPoint).equals(Square.PICKAXESQUARE)) {
-			inventorylist.add(item);
-			cd.addItemToInvetoryList(item);
+			for (int i = 0; i < sh.getItemsOnMap().size(); i++){
+				if (sh.getItemsOnMap().get(i).getName().equals("PICKAXE")){
+					Item newItem = sh.getItemsOnMap().get(i);
+					inventorylist.add(newItem);
+					cd.addItemToInvetoryList(newItem);
+					break;
+				}
+			}
+			
 			this.location = newPoint;
+			currentBoard.animateHPMovement(hpBar, this.location);
 			currentBoard.animateHerderMovement(this.location);
 			level.setSquareAt(newPoint, level.getBackupSquare());
 			currentBoard.updateSquareAt(this.location, level.getBackupSquare());
@@ -157,6 +170,7 @@ public class Herder {
 		// }
 
 		else if (level.getSquareAt(newPoint).equals(Square.ICESQUARE)) {
+			currentBoard.setHPvisibility(hpBar, false);
 			this.location = newPoint;
 			Point destinationPoint = new Point();
 			boolean slidOutOfBounds = false;
@@ -282,7 +296,9 @@ public class Herder {
 
 		else {
 			this.location = newPoint;
+			currentBoard.animateHPMovement(hpBar, this.location);
 			currentBoard.animateHerderMovement(this.location);
+
 		}
 	}
 
@@ -449,5 +465,17 @@ public void killedSheep() {
 
 	public void setSmacked(boolean smacked) {
 		this.smackedSheep = smacked;
+	}
+	
+	public Rectangle getHPbar() {
+		return this.hpBar;
+	}
+	
+	public ArrayList<Item> getItems(){
+		return this.inventorylist;
+	}
+	
+	public boolean isInventoryGreaterThan(int i){
+		return (inventorylist.size() >= i);
 	}
 }

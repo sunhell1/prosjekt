@@ -21,11 +21,13 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.shape.Rectangle;
 import enums.Condition;
 import enums.Constants;
 import enums.Direction;
 import enums.Square;
 import implementation.Herder;
+import implementation.Item;
 import implementation.Sheep;
 import implementation.Level;
 import implementation.Wolf;
@@ -61,6 +63,8 @@ public class SheepHerder extends Scene {
 	private int levelCount = 0;
 
 	private GUI gui;
+	
+	private ArrayList<Item> itemsOnMap;
 
 	public SheepHerder(Group group, int width, int height, GUI gui) {
 
@@ -139,6 +143,10 @@ public class SheepHerder extends Scene {
 			this.wolf = new Wolf(level.getWolfStart(), Condition.ALIVE, this.bd);
 			placeWolf();
 		}
+		
+		if (level.hasItems()){
+			this.itemsOnMap = level.getItems();
+		}
 
 		placePlayer();
 		placeTrees();
@@ -194,6 +202,84 @@ public class SheepHerder extends Scene {
 				gameFlow();
 			}
 		}
+		else if(e.getCode() == KeyCode.DIGIT1){
+			if (!herder.isInventoryGreaterThan(1)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(0).getName())){
+				herder.equip(herder.getItems().get(0).getName());
+			}
+			else herder.unEquip();
+		
+		}
+		else if(e.getCode() == KeyCode.DIGIT2){
+			if (!herder.isInventoryGreaterThan(2)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(1).getName())){
+				herder.equip(herder.getItems().get(1).getName());
+			}
+			else herder.unEquip();
+		
+		}
+		
+		else if(e.getCode() == KeyCode.DIGIT3){
+			if (!herder.isInventoryGreaterThan(3)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(2).getName())){
+				herder.equip(herder.getItems().get(2).getName());
+			}
+			else herder.unEquip();
+		
+		}
+		
+		else if(e.getCode() == KeyCode.DIGIT4){
+			if (!herder.isInventoryGreaterThan(4)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(3).getName())){
+				herder.equip(herder.getItems().get(3).getName());
+			}
+			else herder.unEquip();
+		
+		}
+		
+		else if(e.getCode() == KeyCode.DIGIT5){
+			if (!herder.isInventoryGreaterThan(5)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(4).getName())){
+				herder.equip(herder.getItems().get(4).getName());
+			}
+			else herder.unEquip();
+		
+		}
+		
+		else if(e.getCode() == KeyCode.DIGIT6){
+			if (!herder.isInventoryGreaterThan(6)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(5).getName())){
+				herder.equip(herder.getItems().get(5).getName());
+			}
+			else herder.unEquip();
+		}
+		
+		else if(e.getCode() == KeyCode.DIGIT7){
+			if (!herder.isInventoryGreaterThan(7)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(6).getName())){
+				herder.equip(herder.getItems().get(6).getName());
+			}
+			else herder.unEquip();
+		}
+		
+		else if(e.getCode() == KeyCode.DIGIT8){
+			if (!herder.isInventoryGreaterThan(8)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(7).getName())){
+				herder.equip(herder.getItems().get(7).getName());
+			}
+			else herder.unEquip();
+		}
+		
+		else if(e.getCode() == KeyCode.DIGIT9){
+			if (!herder.isInventoryGreaterThan(9)) return;
+			if (!herder.getItemEquipped().equals(herder.getItems().get(8).getName())){
+				herder.equip(herder.getItems().get(8).getName());
+			}
+			else herder.unEquip();
+		}
+		
+		
+	
 	}
 
 	private boolean isBlocked() {
@@ -222,6 +308,8 @@ public class SheepHerder extends Scene {
 
 	public void placePlayer() {
 		bd.drawHerder(herder.getLocation());
+		bd.setHPvisibility(herder.getHPbar(), false);
+		bd.animateHPMovement(herder.getHPbar(), herder.getLocation());
 	}
 
 	public void placeSheep(ArrayList<Sheep> sheeps) {
@@ -342,5 +430,13 @@ public class SheepHerder extends Scene {
 
 	public ArrayList<Sheep> getSheepArray() {
 		return this.sheeps;
+	}
+	
+	public ArrayList<Item> getItemsOnMap(){
+		return this.itemsOnMap;
+	}
+	
+	public Rectangle getHerderHP() {
+		return herder.getHPbar();
 	}
 }

@@ -89,7 +89,6 @@ public class PlayerStats extends Pane {
 			this.statsBox.getChildren().add(player);
 		}
 		
-		
 		this.getChildren().add(this.statsBox);
 		this.getChildren().add(this.sheepCaught);
 		this.sheepCaught.setLayoutX(500);

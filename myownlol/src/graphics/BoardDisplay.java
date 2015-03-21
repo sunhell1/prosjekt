@@ -2,6 +2,7 @@ package graphics;
 
 import implementation.Level;
 import implementation.Sheep;
+import implementation.Wolf;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -28,9 +29,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -45,7 +48,7 @@ public class BoardDisplay extends Group {
 	ArrayList<Sheep> sheeps;
 
 	private ImageView herder;
-	private ImageView wolf;
+	private Wolf wolf;
 	private ImageView[] board;
 	private ImageView[] trees;
 
@@ -102,12 +105,7 @@ public class BoardDisplay extends Group {
 		herder.setFitHeight(PREFERRED_DIM);
 		herder.setFitWidth(PREFERRED_DIM);
 		herder.setImage(herderImage);
-
-		wolf = new ImageView();
-		wolf.setFitHeight(PREFERRED_DIM);
-		wolf.setFitWidth(PREFERRED_DIM);
-		wolf.setImage(wolfImage);
-
+		
 		square.setHgap(0);
 		square.setVgap(0);
 
@@ -146,6 +144,11 @@ public class BoardDisplay extends Group {
 		herder.setX(p.x * PREFERRED_DIM);
 		herder.setY(p.y * PREFERRED_DIM);
 	}
+	
+//	public void drawHP(Point p, Rectangle HP) {
+//		HP.setX(p.x * PREFERRED_DIM);
+//		HP.setY(p.y * PREFERRED_DIM);
+//	}
 
 	public void drawWolf(Point p) {
 		wolf.setX(p.x * PREFERRED_DIM);
@@ -231,7 +234,6 @@ public class BoardDisplay extends Group {
 
 		if (aniToStart == true) {
 			pt.setOnFinished(event -> slideOutOfMap());
-
 		}
 
 		else {
@@ -239,7 +241,6 @@ public class BoardDisplay extends Group {
 			herder.setX(endPoint.x * PREFERRED_DIM);
 			herder.setY(endPoint.y * PREFERRED_DIM);
 		}
-
 	}
 
 	public void sheepIceSquareAnimation(Point startPoint, Point endPoint,
@@ -335,6 +336,34 @@ public class BoardDisplay extends Group {
 		pathTransition.setOnFinished(event -> sheepHerder.setBlocked(false));
 
 	}
+	
+	public void animateHPMovement(Rectangle HP, Point p) {
+
+		Path path = new Path();
+
+		double px = p.x * PREFERRED_DIM;
+		double py = p.y * PREFERRED_DIM-25;
+
+		path.getElements().add(
+				new MoveTo(HP.getX() + PREFERRED_DIM / 2, HP.getY()
+						+ PREFERRED_DIM / 2));
+		path.getElements().add(
+				new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+		path.getElements().add(
+				new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+
+		PathTransition pathTransition = new PathTransition(
+				Duration.millis(150), path, HP);
+
+		pathTransition.play();
+
+		HP.setX(px);
+		HP.setY(py);
+		
+
+		pathTransition.setOnFinished(event -> setHPvisibility(HP, true));
+
+	}
 
 	public void animateWolfMovement(Point p) {
 		Path path = new Path();
@@ -404,8 +433,11 @@ public class BoardDisplay extends Group {
 
 			System.out.println("HERDER SIN POS: x= " + herder.getX() + " y= "
 					+ herder.getY());
-
 		}
+	}
+	
+	public void loseHP(Rectangle HPbar, int hp) {
+		HPbar.setWidth(HPbar.getWidth()-hp);
 	}
 
 	public void damageAnimation() {
@@ -501,6 +533,15 @@ public class BoardDisplay extends Group {
 	public void changeHerderImage(Image img) {
 		herder.setImage(img);
 	}
+	
+	public Rectangle hpBar(int hp) {
+		Rectangle r = new Rectangle();
+		r.setWidth(hp);
+		r.setHeight(5);
+		r.setFill(Color.GREEN);
+		this.getChildren().add(r);
+		return r;
+	}
 
 	public void animateSheepMovement(Point location, Point destination) {
 
@@ -551,6 +592,7 @@ public class BoardDisplay extends Group {
 			}
 		});
 	}
+
 
 	public void chatDisplay(String stringtext) {
 
@@ -608,6 +650,10 @@ public class BoardDisplay extends Group {
 			}
 		});
 
+	}
+	
+	public void setHPvisibility(Rectangle HP, boolean show) {
+		HP.setVisible(show);
 	}
 
 }
