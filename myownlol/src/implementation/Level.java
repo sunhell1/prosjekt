@@ -99,12 +99,15 @@ public class Level {
 			sheepStarts = new Stack<Point>();
 			Point sheep1 = new Point(6,9);
 			Point sheep2 = new Point(6,10);
+			Point sheep3 = new Point(7,10);
+//			Point sheep4 = new Point(8,10);
+			
 			sheepStarts.push(sheep1);
 			sheepStarts.push(sheep2);
+			sheepStarts.push(sheep3);
+//			sheepStarts.push(sheep4);
 			
-			for (int i = 0; i < sheepStarts.size(); i++) {
-				this.bigSheepCount++;
-			}
+			this.bigSheepCount = sheepStarts.size();
 
 			this.backupSquare = Square.SNOWSQUARE;
 

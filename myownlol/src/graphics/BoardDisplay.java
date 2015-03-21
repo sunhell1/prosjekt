@@ -40,7 +40,7 @@ public class BoardDisplay extends Group {
 	private GridPane square;
 
 	private Square[][] squares;
-	
+
 	ArrayList<Sheep> sheeps;
 
 	private ImageView herder;
@@ -59,7 +59,7 @@ public class BoardDisplay extends Group {
 	private Image hfence;
 
 	private Level level;
-	
+
 	private SheepHerder sheepHerder;
 
 	private int sheepCounter = 0;
@@ -73,9 +73,9 @@ public class BoardDisplay extends Group {
 		this.squares = this.level.getBoardLayout();
 
 		this.square = new GridPane();
-		
+
 		this.sheeps = sh.getSheepArray();
-		
+
 		this.sheepHerder = sh;
 
 		this.herderImage = Square.HERDER.getImage();
@@ -150,7 +150,7 @@ public class BoardDisplay extends Group {
 		wolf.setX(p.x * PREFERRED_DIM);
 		wolf.setY(p.y * PREFERRED_DIM);
 	}
-	
+
 	public void drawSheep(Sheep sheep) {
 		sheep.setX(sheep.getLocation().x * PREFERRED_DIM);
 		sheep.setY(sheep.getLocation().y * PREFERRED_DIM);
@@ -197,7 +197,7 @@ public class BoardDisplay extends Group {
 
 	public void iceSquareAnimation(Point startPoint, Point endPoint,
 			boolean animateToStart) {
-		
+
 		sheepHerder.setBlocked(true);
 
 		boolean aniToStart = animateToStart;
@@ -215,7 +215,7 @@ public class BoardDisplay extends Group {
 
 		PathTransition pt = new PathTransition(Duration.millis(1500), path,
 				herder);
-		
+
 		pt.play();
 
 		RotateTransition rotateTransition = new RotateTransition(
@@ -224,30 +224,28 @@ public class BoardDisplay extends Group {
 		rotateTransition.setCycleCount(1);
 		rotateTransition.setAutoReverse(true);
 		rotateTransition.play();
-	
-		
+
 		herder.setX(endPoint.x * PREFERRED_DIM);
 		herder.setY(endPoint.y * PREFERRED_DIM);
 
-		
 		if (aniToStart == true) {
 			pt.setOnFinished(event -> slideOutOfMap());
-		
+
 		}
-		
+
 		else {
-		pt.setOnFinished(event -> sheepHerder.setBlocked(false));
-		herder.setX(endPoint.x * PREFERRED_DIM);
-		herder.setY(endPoint.y * PREFERRED_DIM);
+			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
+			herder.setX(endPoint.x * PREFERRED_DIM);
+			herder.setY(endPoint.y * PREFERRED_DIM);
 		}
-		
+
 	}
-	
+
 	public void sheepIceSquareAnimation(Point startPoint, Point endPoint,
 			Sheep sheep) {
-		
+
 		sheepHerder.setBlocked(true);
-		
+
 		boolean sheepDied = false;
 
 		Path path = new Path();
@@ -263,7 +261,7 @@ public class BoardDisplay extends Group {
 
 		PathTransition pt = new PathTransition(Duration.millis(1500), path,
 				sheep);
-		
+
 		pt.play();
 
 		RotateTransition rotateTransition = new RotateTransition(
@@ -272,52 +270,47 @@ public class BoardDisplay extends Group {
 		rotateTransition.setCycleCount(1);
 		rotateTransition.setAutoReverse(true);
 		rotateTransition.play();
-	
-		
+
 		sheep.setX(endPoint.x * PREFERRED_DIM);
 		sheep.setY(endPoint.y * PREFERRED_DIM);
 
-		
-		
 		if (sheepDied == true) {
 			pt.setOnFinished(event -> slideOutOfMap());
-		
+
 		}
-		
+
 		else {
-		pt.setOnFinished(event -> sheepHerder.setBlocked(false));
-		sheep.setX(endPoint.x * PREFERRED_DIM);
-		sheep.setY(endPoint.y * PREFERRED_DIM);
+			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
+			sheep.setX(endPoint.x * PREFERRED_DIM);
+			sheep.setY(endPoint.y * PREFERRED_DIM);
 		}
-		
 	}
 
-	
-
 	private void slideOutOfMap() {
-		
+
 		Timeline slideLine = new Timeline();
-		
+
 		slideLine.setCycleCount(1);
 		slideLine.setAutoReverse(false);
-		
-		KeyFrame ani1 = new KeyFrame(Duration.millis(200), event -> animateToStart(level.getHerderStart()));
+
+		KeyFrame ani1 = new KeyFrame(Duration.millis(200),
+				event -> animateToStart(level.getHerderStart()));
 		System.out.println("ANIMERER TIL START HER!");
-		KeyFrame ani2 = new KeyFrame(Duration.millis(500), event -> damageAnimation());
+		KeyFrame ani2 = new KeyFrame(Duration.millis(500),
+				event -> damageAnimation());
 		System.out.println("ANIMERER DAMAGEANIMATION");
-		
-		
+
 		slideLine.getKeyFrames().add(ani1);
 		slideLine.getKeyFrames().add(ani2);
-		
+
 		slideLine.play();
-		
+
 	}
 
 	public void animateHerderMovement(Point p) {
-		
+
 		sheepHerder.setBlocked(true);
-		
+
 		Path path = new Path();
 
 		double px = p.x * PREFERRED_DIM;
@@ -335,12 +328,11 @@ public class BoardDisplay extends Group {
 				Duration.millis(150), path, herder);
 
 		pathTransition.play();
-		
+
 		herder.setX(px);
 		herder.setY(py);
-		
-		pathTransition.setOnFinished(event -> sheepHerder.setBlocked(false));
 
+		pathTransition.setOnFinished(event -> sheepHerder.setBlocked(false));
 
 	}
 
@@ -365,7 +357,7 @@ public class BoardDisplay extends Group {
 	}
 
 	public void animateToStart(Point p) {
-		
+
 		sheepHerder.setBlocked(true);
 
 		if (herder.getX() == 0 && herder.getY() == 0) {
@@ -378,7 +370,7 @@ public class BoardDisplay extends Group {
 			PathTransition pt = new PathTransition(Duration.millis(1000), path,
 					herder);
 			pt.play();
-			
+
 			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
 
 			herder.setX(0);
@@ -397,20 +389,21 @@ public class BoardDisplay extends Group {
 					new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
 			path.getElements().add(
 					new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
-			
-			System.out.println("HERDER SIN POS: x= " + herder.getX() + " y= " + herder.getY());
-	
+
+			System.out.println("HERDER SIN POS: x= " + herder.getX() + " y= "
+					+ herder.getY());
 
 			PathTransition pt = new PathTransition(Duration.millis(1000), path,
 					herder);
 			pt.play();
-		
+
 			pt.setOnFinished(event -> sheepHerder.setBlocked(false));
-			
+
 			herder.setX(level.getHerderStart().x * PREFERRED_DIM);
 			herder.setY(level.getHerderStart().y * PREFERRED_DIM);
-			
-			System.out.println("HERDER SIN POS: x= " + herder.getX() + " y= " + herder.getY());
+
+			System.out.println("HERDER SIN POS: x= " + herder.getX() + " y= "
+					+ herder.getY());
 
 		}
 	}
@@ -426,9 +419,9 @@ public class BoardDisplay extends Group {
 	}
 
 	public void pickRockAnimation() {
-		
+
 		sheepHerder.setBlocked(true);
-		
+
 		Timeline timeline = new Timeline();
 		timeline.setCycleCount(2);
 		timeline.setAutoReverse(true);
@@ -510,27 +503,29 @@ public class BoardDisplay extends Group {
 	}
 
 	public void animateSheepMovement(Point location, Point destination) {
-		
-		for(int i = 0; i < sheeps.size(); i++) {
-			if(sheeps.get(i).getLocation().equals(location)) {
+
+		for (int i = 0; i < sheeps.size(); i++) {
+			if (sheeps.get(i).getLocation().equals(location)) {
 				Path path = new Path();
 
 				double px = destination.x * PREFERRED_DIM;
 				double py = destination.y * PREFERRED_DIM;
 
 				path.getElements().add(
-						new MoveTo(sheeps.get(i).getX() + PREFERRED_DIM / 2, sheeps.get(i).getY()
-								+ PREFERRED_DIM / 2));
+						new MoveTo(sheeps.get(i).getX() + PREFERRED_DIM / 2,
+								sheeps.get(i).getY() + PREFERRED_DIM / 2));
 				path.getElements().add(
-						new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+						new LineTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM
+								/ 2));
 				path.getElements().add(
-						new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM / 2));
+						new MoveTo(px + PREFERRED_DIM / 2, py + PREFERRED_DIM
+								/ 2));
 
 				PathTransition pathTransition = new PathTransition(
 						Duration.millis(150), path, sheeps.get(i));
 
 				pathTransition.play();
-				
+
 				sheeps.get(i).setX(px);
 				sheeps.get(i).setY(py);
 			}

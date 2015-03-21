@@ -76,7 +76,7 @@ public class Herder {
 		this.item = new Item("PICKAXE", Square.GRASS.getImage());
 
 		this.itemEquipped = "";
-		
+
 		this.sheeps = sh.getSheepArray();
 
 		this.killedSheep = false;
@@ -353,11 +353,14 @@ public class Herder {
 
 	public void smackSheep(Point p) {
 
+		Point p1;
 		if (!level.isLocationOutOfBounds(new Point(p.x + 1, p.y))
 				&& level.isSquareValid(new Point(p.x + 2, p.y))) {
 			for (Sheep sheep : sheeps) {
 				if (sh.containsSheep(new Point(p.x + 1, p.y))) {
-					sheep.move(sheep.getLocation(), Direction.EAST);
+					p1 = new Point(p.x + 1, p.y);
+					if (sheep.getLocation().equals(p1))
+						sheep.move(sheep.getLocation(), Direction.EAST);
 				}
 			}
 		}
@@ -365,7 +368,9 @@ public class Herder {
 				&& level.isSquareValid(new Point(p.x - 2, p.y))) {
 			for (Sheep sheep : sheeps) {
 				if (sh.containsSheep(new Point(p.x - 1, p.y))) {
-					sheep.move(sheep.getLocation(), Direction.WEST);
+					p1 = new Point(p.x - 1, p.y);
+					if (sheep.getLocation().equals(p1))
+						sheep.move(sheep.getLocation(), Direction.WEST);
 				}
 			}
 		}
@@ -373,7 +378,9 @@ public class Herder {
 				&& level.isSquareValid(new Point(p.x, p.y + 2))) {
 			for (Sheep sheep : sheeps) {
 				if (sh.containsSheep(new Point(p.x, p.y + 1))) {
-					sheep.move(sheep.getLocation(), Direction.SOUTH);
+					p1 = new Point(p.x, p.y + 1);
+					if (sheep.getLocation().equals(p1))
+						sheep.move(sheep.getLocation(), Direction.SOUTH);
 				}
 			}
 		}
@@ -381,7 +388,9 @@ public class Herder {
 				&& level.isSquareValid(new Point(p.x, p.y - 2))) {
 			for (Sheep sheep : sheeps) {
 				if (sh.containsSheep(new Point(p.x, p.y - 1))) {
-					sheep.move(sheep.getLocation(), Direction.NORTH);
+					p1 = new Point(p.x, p.y - 1);
+					if (sheep.getLocation().equals(p1))
+						sheep.move(sheep.getLocation(), Direction.NORTH);
 				}
 			}
 		}
